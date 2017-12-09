@@ -1,0 +1,43 @@
+$background-color: #f0f0f0;
+$primary: #FFC935;
+
+.pd {
+  padding: 0.4237rem 0.48rem;
+}
+
+.black {
+  color: #333;
+}
+.black-2 {
+  color: #666;
+}
+.black-3 {
+  color: #999;
+}
+
+.grey {
+  color: #aaa;
+}
+
+.red {
+  color: #FF5149;
+}
+.origin {
+  color: #F5A623;
+}
+.primary {
+  color: $primary;
+}
+.success {
+  color: #43B750;
+}
+
+.fs-sm {
+  font-size: 12px;
+}
+.fs-me {
+  font-size: 14px;
+}
+.fs-lg {
+  font-size: 16px;
+}
