@@ -14,20 +14,33 @@
 <script>
   import Swipe from 'swipejs'
 
+  let init = 10
   export default {
     name: 'x-slider',
-    props: ['indicator'],
+    props: ['indicator', 'length'],
     mounted () {
-      /* eslint-disable no-new */
-      new Swipe(this.$refs.slider, {
+      this.swipe = new Swipe(this.$refs.slider, {
         callback: this.onSlide
       })
-      this.dots = this.$slots.default.filter(i => i.tag).map((i, idx) => idx)
+      if (this.$slots.default) {
+        this.dots = this.$slots.default.filter(i => i.tag).map((i, idx) => idx)
+      }
     },
     data () {
       return {
         current: 0,
         dots: []
+      }
+    },
+    watch: {
+      length () {
+        console.log(this.length)
+        this.$nextTick(() => {
+          this.swipe.setup()
+        })
+        if (this.$slots.default) {
+          this.dots = this.$slots.default.filter(i => i.tag).map((i, idx) => idx)
+        }
       }
     },
     methods: {

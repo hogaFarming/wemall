@@ -1,7 +1,11 @@
 <template>
   <div>
-    <x-cell class="mgb">订单总价 <x-money :value="1124" color="red" slot="right"></x-money></x-cell>
-    <x-cell>还需要支付 <x-money :value="289" size="small"></x-money></x-cell>
+    <x-cell class="mgb">订单总价
+      <x-money :value="orderData.actual_price" color="red" slot="right"></x-money>
+    </x-cell>
+    <x-cell>还需要支付
+      <x-money :value="orderData.pay_amount" size="small"></x-money>
+    </x-cell>
     <x-radio-select v-model="selectedPayWay" :options="payWays"></x-radio-select>
     <div style="margin: 1.0667rem 0.75rem;">
       <x-button size="full" type="primary" pill @click.native="confirmPay">确认支付</x-button>
@@ -38,19 +42,62 @@
   export default {
     data: function () {
       return {
-        payWays: [{ label: '微信支付', value: 1 }],
+        orderId: this.$route.query.orderid,
+        orderData: {},
+        payWays: [{label: '微信支付', value: 'wechatpay'}],
         selectedPayWay: 1,
+        isWeChat: this.$utils.isWeChat(),
         modalVisible: false
       }
     },
+    mounted () {
+      this.fetchOrderData()
+    },
     methods: {
-      confirmPay: function () {
-        this.modalVisible = true
+      fetchOrderData () {
+        this.$http.withLoading(`/api/orders/${this.orderId}`).then(res => {
+          this.orderData = res.data
+          // TODO 哪个金额
+          this.orderData.pay_amount = res.data.actual_price - res.data.paid_price
+        })
       },
-      onModalConfirm: function () {
+      confirmPay () {
+        this.wechatpay()
+      },
+      wechatpay () {
+        this.$http.withLoading({
+          url: '/api/order/pays',
+          data: {
+            type: 'wechatpay',
+            device: 'wap',
+            order_id: this.orderId
+          }
+        }).then(res => {
+          if (res) {
+            const data = res.data
+            window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
+              appId: data.appId,           // 公众号名称，由商户传入
+              timeStamp: data.timeStamp,   // 时间戳，自1970年以来的秒数
+              nonceStr: data.nonceStr,     // 随机串
+              package: data.package,
+              signType: data.signType,     // 微信签名方式：
+              paySign: data.paySign        // 微信签名
+            }, res => {
+              if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                window.location.href = '/order/paystatus?order_id=' + this.orderId
+              } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+              } else {
+                window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+              }
+            })
+          }
+        })
+      },
+      onModalConfirm () {
         this.modalVisible = false
       },
-      onModalCancel: function () {
+      onModalCancel () {
         this.modalVisible = false
       }
     }

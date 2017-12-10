@@ -5,97 +5,124 @@
     @input="onVisibleChange"
     position="bottom">
     <div class="sku">
-      <x-icon class="pin popup-close" type="close" @click.native="close"></x-icon>
-      <x-media-object :pic="skuModel.img" pull="1rem" padding bordered>
-        <p class="sku-price">
-          <x-money :value="skuModel.price"></x-money>
-        </p>
-        <p class="sku-desc">
-          库存 {{ skuModel.store }} 件
-        </p>
-        <p class="sku-desc">
-          已选规格：15ML
-        </p>
-      </x-media-object>
-      <!--<div class="media bdb">-->
-        <!--<div class="media-left">-->
-          <!--<div class="sku-img-helper">-->
-            <!--<div class="image">-->
-              <!--<img :src="skuModel.img" alt="">-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="media-content">-->
-          <!--<p class="sku-price">-->
-            <!--<x-money :value="skuModel.price"></x-money>-->
-          <!--</p>-->
-          <!--<p class="sku-desc">-->
-            <!--库存 {{ skuModel.store }} 件-->
-          <!--</p>-->
-          <!--<p class="sku-desc">-->
-            <!--已选规格：15ML-->
-          <!--</p>-->
-        <!--</div>-->
-      <!--</div>-->
-      <div v-for="item in skuModel.prodOptions" class="sku-option bdb">
-        <div class="sku-option-title">{{ item.title }}</div>
-        <div class="sku-option-opts">
-          <x-label-radio
-            :value="value[item.key]"
-            :options="item.options"
-            @change="pickedChange(item.key, $event)"
-            :keys="['label', 'id']">
-          </x-label-radio>
+      <div class="sku-head">
+        <x-media-object :pic="selectedSku.image || goodsInfo.image" pull="1rem" padding bordered>
+          <p class="sku-price">
+            <x-money :value="selectedSku.sale_price"></x-money>
+          </p>
+          <p class="sku-desc">
+            库存 {{ selectedSku.stock }} 件
+          </p>
+          <p class="sku-desc">
+            已选规格：{{ selectedPropsText }}
+          </p>
+          <x-icon slot="right" type="close" @click.native="close"></x-icon>
+        </x-media-object>
+      </div>
+      <div class="sku-body">
+        <div v-for="property in properties" class="sku-option bdb">
+          <div class="sku-option-title">{{ property.sku_property_name }}</div>
+          <div class="sku-option-opts">
+            <x-label-radio
+              :value="selectedProps[property.sku_property_id]"
+              :options="property.sku_property_value"
+              @change="onSelectedPropChange(property.sku_property_id, $event)"
+              :keys="['sku_property_value_name', 'sku_property_value_id']">
+            </x-label-radio>
+          </div>
+        </div>
+        <div class="sku-amount bar">
+          数量
+          <div class="bar-right">
+            <x-number-input :value="_value.amount" @input="onAmountChange" :max="selectedSku.stock"></x-number-input>
+          </div>
         </div>
       </div>
-      <div class="sku-amount bar">
-        数量
-        <div class="bar-right">
-          <x-number-input :value="value._amount" @input="pickedChange('_amount', $event)"></x-number-input>
-        </div>
+      <div class="sku-foot">
+        <x-button-group class="sku-button">
+          <x-button type="primary" v-show="showingButton.cart" @click.native="$emit('cart')" :disabled="!isOk">加入购物车</x-button>
+          <x-button type="danger" v-show="showingButton.buy" @click.native="$emit('buy')" :disabled="!isOk">立即购买</x-button>
+          <x-button type="danger" v-show="showingButton.confirm" @click.native="$emit('confirm')" :disabled="!isOk">确定</x-button>
+        </x-button-group>
       </div>
-      <x-button-group class="sku-button">
-        <x-button type="primary" @click.native="$emit('addCart')">加入购物车</x-button>
-        <x-button type="danger" @click.native="$emit('buy')">立即购买</x-button>
-      </x-button-group>
     </div>
   </mt-popup>
 </template>
 <script>
-  import popupMixin from '../mixins/popupMixin'
+  import { popupMixin } from 'core/mixins'
   export default {
     mixins: [popupMixin],
-    props: {
-      value: {
-        type: Object,
-        default () {
-          return {
-            _amount: 1
-          }
+    props: ['value', 'skuModel', 'buttons'],
+    data () {
+      return {}
+    },
+    computed: {
+      _value () {
+        return this.value || {
+          skuId: 0,
+          selectedProps: {},
+          amount: 1
         }
       },
-      skuModel: {
-        type: Object,
-        default () {
-          return {
-            img: '',
-            prodOptions: []
-          }
+      _skuModel () {
+        return this.skuModel || {
+          skus: [],
+          property: [],
+          goodsInfo: {}
         }
-      }
-    },
-    data () {
-      return {
+      },
+      showingButton () {
+        const res = {}
+        if (this.buttons) {
+          this.buttons.forEach(key => { res[key] = true })
+        } else {
+          res.cart = true
+          res.buy = true
+        }
+        return res
+      },
+      goodsInfo () {
+        return this._skuModel.goodsInfo || {}
+      },
+      properties () {
+        return this._skuModel.property || []
+      },
+      selectedProps () {
+        return this._value.selectedProps || {}
+      },
+      selectedSku () {
+        const skuId = this._value.skuId
+        if (!skuId) return {}
+        const sku = this.$utils.find(this._skuModel.skus, i => i.id === skuId)
+        return sku || {}
+      },
+      // 显示当前选中规格
+      selectedPropsText () {
+        if (this.selectedSku.id) return this.selectedSku.value_name_array.join(',')
+        return this.$utils.skuTool.getSelectedPropsText(this._value.selectedProps, this._skuModel.property)
+      },
+      isOk () {
+        return this.selectedSku && this.selectedSku.stock > 0
       }
     },
     methods: {
-      pickedChange (key, value) {
-        console.log(value + ':' + key)
+      onSelectedPropChange (propId, propValue) {
+        const selectedProps = {
+          ...this._value.selectedProps,
+          [propId]: propValue
+        }
         const newValue = {
-          ...this.value,
-          [key]: value
+          ...this._value,
+          selectedProps,
+          skuId: this.$utils.skuTool.getSkuId(selectedProps, this._skuModel.skus) || 0
         }
         this.$emit('input', newValue)
+      },
+      onAmountChange (amount) {
+        this.$emit('input', {
+          ...this._value,
+          amount
+        })
       }
     }
   }
@@ -108,23 +135,41 @@
   }
   .sku-popup {
     width: 100%;
+    top: 32%;
+    background-color: transparent;
   }
   .sku {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: #fff;
   }
-  /*.sku .media {*/
-    /*padding: 0.427rem 0.48rem 0.373rem;*/
-  /*}*/
-  /*.sku-img-helper {*/
-    /*width: 2.67rem;*/
-    /*height: 1.2rem;*/
-  /*}*/
-  /*.sku .image {*/
-    /*position: relative;*/
-    /*bottom: 1.2rem;*/
-    /*width: 2.67rem;*/
-    /*height: 2.67rem;*/
-  /*}*/
+  .sku-head {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+  }
+  .sku-body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 48px;
+    overflow: auto;
+  }
+  .sku-foot {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+  }
+  .sku-button {
+    height: 100%;
+  }
   .sku-option {
     padding: 0.5333rem 0.42rem;
   }

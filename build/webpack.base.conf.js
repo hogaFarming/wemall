@@ -38,11 +38,8 @@ module.exports = {
       '@': resolve('src'),
       'assets': resolve('src/assets'),
       'components': resolve('src/components'),
-      'filters': resolve('src/filters'),
-      'mixins': resolve('src/mixins'),
+      'core': resolve('src/core'),
       'parts': resolve('src/parts'),
-      'router': resolve('src/router'),
-      'services': resolve('src/services'),
       'styles': resolve('src/styles'),
       'utils': resolve('src/utils'),
       'views': resolve('src/views')

@@ -1,5 +1,5 @@
 <template>
-  <x-icon :type="value ? 'select_ele' : 'select_nor'" @click.native="$emit('input', !value)"></x-icon>
+  <x-icon class="x-checkbox" :type="value ? 'select_ele' : 'select_nor'" @click.native="$emit('input', !value)"></x-icon>
 </template>
 
 <script>

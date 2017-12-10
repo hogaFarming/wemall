@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <x-cell class="bdb">
       <x-search v-model="searchText" @search="search"></x-search>
     </x-cell>
@@ -12,35 +11,47 @@
     <div>
       <div v-if="list.length">
         <div class="black-3" style="padding: 0 0.27rem 0.32rem;">
-          {{ queries.keyword }}-找到 {{ total }} 个结果
+          {{ queries.goods_name }}-找到 {{ total }} 个结果
         </div>
-        <div class="search-result">
+        <div
+          class="search-result"
+          v-infinite-scroll="loadMore"
+          infinite-scroll-disabled="infiniteScrollDistance"
+          infinite-scroll-distance="10">
           <x-card
             class="result-item"
             v-for="item in list"
             :key="item.id"
-            :pic="item.pic"
+            :pic="thumbnail(item.cover, 300)"
+            @click.native="toProdDetail(item)"
             pic-width="4.53rem"
             pic-height="4.2667rem">
-            <span>{{ item.title }}</span>
-            <x-money :value="item.price" slot="meta" color="red"></x-money>
+            <span>{{ item.name }}</span>
+            <x-money :value="item.sale_price" slot="meta" color="red"></x-money>
           </x-card>
         </div>
       </div>
     </div>
     <mt-popup class="filter-popup" position="right" :value="filterVisible" @input="onFilterVisibleChange">
-      <div class="filter-section">
-        <div class="filter-section-title">品牌</div>
-        <div class="filter-section-body">
-          <x-label-check :options="filterBrands" v-model="selectedBrands"></x-label-check>
+      <div class="filter-popup-content">
+        <div class="filter-section" v-for="cat in categories">
+          <div class="filter-section-title">{{ cat.name }}</div>
+          <div class="filter-section-body">
+            <x-label-radio
+              :options="cat.children"
+              :value="cat.next_selected"
+              :keys="['name', 'id']"
+              @input="cat.next_selected = $event">
+            </x-label-radio>
+          </div>
         </div>
-      </div>
-      <div class="filter-section">
-        <div class="filter-section-title">价格区间</div>
-        <div class="filter-section-body">
-          <input class="filter-price-input" type="number" placeholder="最低价" v-model="startPrice" ref="startPrice">
-          <span style="margin: 0 0.27rem;">-</span>
-          <input class="filter-price-input" type="number" placeholder="最高价" v-model="endPrice" ref="endPrice">
+        <div class="filter-section">
+          <div class="filter-section-title">价格区间</div>
+          <div class="filter-section-body">
+            <input class="filter-price-input" type="number" placeholder="最低价" v-model="startPrice" ref="startPrice">
+            <span style="margin: 0 0.27rem;">-</span>
+            <input class="filter-price-input" type="number" placeholder="最高价" v-model="endPrice" ref="endPrice">
+          </div>
         </div>
       </div>
       <div class="filter-btns">
@@ -54,11 +65,11 @@
   export default {
     data: function () {
       return {
-        pageIndex: 1,
+        nextPage: '',
         searchText: this.$route.query.goods_name || '',
         currentTab: 1,
         priceDir: 1,
-        selectedBrands: [],
+        selectedBrands: undefined,
         startPrice: undefined,
         endPrice: undefined,
 
@@ -67,46 +78,71 @@
         list: [],
 
         filterVisible: false,
-        filterBrands: []
+        filterBrands: [],
+        categories: []
       }
     },
     mounted: function () {
       this.search(this.searchText)
     },
+    computed: {
+      infiniteScrollDistance () {
+        return !this.nextPage
+      }
+    },
     methods: {
       search () {
-        this.queryList({
-          ...this.queries,
-          pageIndex: 1,
-          goods_name: this.searchText,
+        this.queries = {
+          goods_name: this.searchText || undefined,
           goods_brand_id: this.selectedBrands,
-          start_price: this.startPrice || undefined,
-          end_price: this.endPrice || undefined,
+          // start_price: this.startPrice * 100 || undefined,
+          // end_price: this.endPrice * 100 || undefined,
           status: this.currentTab === 1 ? 2 : 3, // 1根据评价分数排序2根据销量3根据价格4根据上架时间
           sort: this.priceDir
-        })
+        }
+        if (this.startPrice > 0) {
+          this.queries.start_price = this.startPrice * 100
+        }
+        if (this.endPrice > 0) {
+          this.queries.end_price = this.endPrice * 100
+          if (!this.startPrice) {
+            this.queries.start_price = 0
+          }
+        }
+        this.queryList()
       },
       loadMore () {
-        this.queryList(this.queries)
+        this.queryList(this.nextPage)
       },
       reloadList () {
-        this.queryList({
-          ...this.queries,
-          pageIndex: 1
-        })
+        this.queryList()
       },
       /**
        * 查询列表
        */
-      queryList (queries) {
-        const params = this.queries = queries
-        this.$http.withLoading('/api/goodses', { params })
+      queryList (nextPage) {
+        const options = {
+          url: nextPage || '/api/goodses',
+          params: nextPage ? undefined : this.queries
+        }
+        if (this.queries.goods_name) {
+          this.$service.pushHistorySearch(this.queries.goods_name)
+        }
+        this.$http.withLoading(options)
           .then(result => {
-            if (queries.pageIndex === 1) {
-              this.list = result.data
+            if (result.list.current_page === 1) {
+              this.list = result.list.data
             } else {
-              this.list = this.list.concat(result.data)
+              this.list = this.list.concat(result.list.data)
             }
+            this.total = result.list.total
+            this.nextPage = result.list.next_page_url
+          })
+      },
+      queryCategories () {
+        return this.$http.withLoading('/api/goods/categorys')
+          .then(result => {
+            this.categories = result.list
           })
       },
       onTabChange: function (tabId) {
@@ -114,7 +150,7 @@
           case 1:
             if (this.currentTab === 1) return
             this.currentTab = 1
-            this.reloadList()
+            this.search()
             break
           case 2:
             if (this.currentTab === 2) {
@@ -122,7 +158,7 @@
             } else {
               this.currentTab = 2
             }
-            this.reloadList()
+            this.search()
             break
           case 3:
             this.showFilter()
@@ -132,33 +168,27 @@
       /**
        * 弹出筛选器
        */
-      showFilter: function () {
-        var self = this
-        self.$loading()
-        setTimeout(function () {
-          self.$hideLoading()
-          self.filterVisible = true
-          self.filterBrands = [
-            { label: '水密码', value: 1 },
-            { label: '韩后', value: 2 },
-            { label: '欧诗漫', value: 3 },
-            { label: '百雀羚', value: 4 }
-          ]
-        }, 300)
+      showFilter () {
+        this.queryCategories().then(() => {
+          this.filterVisible = true
+        })
       },
-      onFilterVisibleChange: function (visible) {
+      onFilterVisibleChange (visible) {
         this.filterVisible = visible
       },
-      confirmFilter: function () {
+      confirmFilter () {
         this.$refs.startPrice.value = this.startPrice = this.startPrice > 0 ? this.startPrice : ''
         this.$refs.endPrice.value = this.endPrice = this.endPrice > 0 ? this.endPrice : ''
         this.filterVisible = false
         this.search()
       },
-      resetFilter: function () {
+      resetFilter () {
         this.selectedBrands = []
         this.$refs.startPrice.value = ''
         this.$refs.endPrice.value = ''
+      },
+      toProdDetail (item) {
+        this.$router.push(`/product/${item.id}`)
       }
     }
   }
@@ -182,6 +212,11 @@
     height: 100%;
     background-color: #ffffff;
     font-size: 14px;
+  }
+  .filter-popup-content {
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 70px;
   }
   .filter-section {
     padding: 0.5333rem 0.32rem;

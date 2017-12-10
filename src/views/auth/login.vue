@@ -49,7 +49,7 @@
   }
 </style>
 <script>
-  import md5 from 'md5'
+  import * as md5 from 'md5'
   export default {
     data () {
       return {
@@ -62,11 +62,9 @@
     },
     methods: {
       login () {
-        const md = md5
-        debugger
         const data = {
-          // phone: this.account,
-          // password: md5(this.password)
+          phone: this.account,
+          password: md5(this.password)
         }
         this.$http.post('/api/logins', data).then(result => {
           this.$cache.set('isLogin', 1)

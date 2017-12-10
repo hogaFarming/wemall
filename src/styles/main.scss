@@ -10,11 +10,15 @@ body {
   background-color: $background-color;
 }
 
+.pd {
+  padding: 0.4267rem 0.48rem;
+}
+
 .mod, .mod_pd {
   background-color: #fff;
 }
 .mod_pd {
-  padding: 0.4267rem 0.48rem;;
+  padding: 0.4267rem 0.48rem;
 }
 .mod .title:not(:last-child),
 .mod_pd .title:not(:last-child) {
@@ -155,7 +159,7 @@ body {
   display: inline-block;
   width: 60px;
   height: 12px;
-  background-image: url("/static/icon/ic_star.png");
+  background-image: url("/static/icon/ic_star_o.png");
   background-size: 12px 12px;
 }
 .star::after {
@@ -164,7 +168,7 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  background-image: url("/static/icon/ic_star_o.png");
+  background-image: url("/static/icon/ic_star.png");
   background-size: 12px 12px;
 }
 .star-1::after {
@@ -267,14 +271,29 @@ body {
   display: -webkit-box;
   -webkit-box-align: center;
   -webkit-box-pack: center;
+  background-color: #fff;
+  position: relative;
 }
 .image-bordered {
   border: 1px solid #f0f0f0;
+  background-color: #fff;
 }
 .image img {
   max-width: 100%;
   max-height: 100%;
   vertical-align: top;
+}
+.image .image-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: rgba(0,0,0,0.40);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 0.5333rem;
+  height: 0.5333rem;
 }
 
 .pin {
@@ -300,5 +319,12 @@ body {
 }
 .card-list-item:nth-child(2n) {
   margin-right: 0;
+}
+
+.mint-toast {
+  z-index: 3001;
+}
+.page {
+  font-size: 14px;
 }
 

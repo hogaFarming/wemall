@@ -4,9 +4,11 @@
       <div v-if="icon" class="x-media-icon">
         <x-icon :type="icon" :style="{ width: size, height: size }"></x-icon>
       </div>
-      <div v-if="pic" class="image" :style="{ width: size, height: size }">
+      <div v-else-if="pic" class="image" :style="{ width: size, height: size }">
         <img :src="pic" alt="">
+        <div class="image-text" v-if="picText">{{ picText }}</div>
       </div>
+      <slot v-else name="left"></slot>
     </div>
     <div class="x-media-content">
       <div class="x-media-content-title" v-if="title">
@@ -43,6 +45,7 @@
       padding: Boolean,
       icon: String,
       pic: String,
+      picText: String,
       size: {
         type: String,
         default: PIC_SIZE

@@ -49,8 +49,8 @@
           this.$toast(err.data.error_msg)
         })
       },
-      getHistorySearch () {
-        this.$service.getHistorySearch().then(result => {
+      queryHistorySearch () {
+        this.$service.queryHistorySearch().then(result => {
           this.historySearch = result
         })
       },

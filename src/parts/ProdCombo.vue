@@ -32,7 +32,7 @@
   </mt-popup>
 </template>
 <script>
-  import popupMixin from '../mixins/popupMixin'
+  import { popupMixin } from 'core/mixins'
 
   export default {
     mixins: [popupMixin],

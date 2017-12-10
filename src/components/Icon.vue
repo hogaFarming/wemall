@@ -6,7 +6,7 @@
 <script>
   export default {
     name: 'x-icon',
-    props: ['type'],
+    props: ['type', 'shadow'],
     computed: {
       imgSrc () {
         return '/static/icon/ic_' + this.type + '.png'

@@ -18,7 +18,7 @@
   }
   .x-slider-item img {
     display: block;
-    height: 8.4rem;
+    /*height: 8.4rem;*/
     margin: 0 auto;
   }
 </style>

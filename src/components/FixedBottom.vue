@@ -10,12 +10,20 @@
     props: {
       bordered: Boolean
     },
+    data () {
+      return {
+        ts: +new Date()
+      }
+    },
     mounted () {
-      document.body.appendChild(this.$refs.container)
+      // document.body.appendChild(this.$refs.container)
       const offsetHeight = this.$refs.container.offsetHeight
       if (offsetHeight) {
         document.body.style.paddingBottom = offsetHeight + 'px'
       }
+    },
+    destoryed () {
+      // document.body.removeChild(this.$refs.container)
     }
   }
 </script>

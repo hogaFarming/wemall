@@ -1,5 +1,5 @@
 <template>
-  <div class="number-input">
+  <div class="number-input" :class="{'number-input--disabled': disabled}">
     <span
       class="number-input-op"
       :class="{ disabled: isMin }"
@@ -18,7 +18,12 @@
 <script>
   export default {
     name: 'x-number-input',
-    props: ['value', 'min', 'max'],
+    props: {
+      value: [Number, String],
+      min: [Number, String],
+      max: [Number, String],
+      disabled: Boolean
+    },
     computed: {
       displayValue () {
         const num = parseInt(this.value, 10)
@@ -33,6 +38,7 @@
     },
     methods: {
       add (num) {
+        if (this.disabled) return false
         if (num < 0 && this.isMin) return false
         if (num > 0 && this.isMax) return false
         const result = parseInt(this.value + num, 10)
@@ -74,6 +80,11 @@
     right: 0;
   }
   .number-input-op.disabled {
+    background-color: #f4f4f4;
+    color: #dddddd;
+  }
+  .number-input--disabled .number-input-op,
+  .number-input--disabled .number-input-num {
     background-color: #f4f4f4;
     color: #dddddd;
   }

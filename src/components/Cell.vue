@@ -13,7 +13,8 @@
   <!--</mt-cell>-->
   <div class="x-cell" :class="cls">
     <x-icon v-if="icon" :type="icon"></x-icon>
-    <slot>&nbsp;</slot>
+    <div v-if="title">{{ title }}</div>
+    <slot v-else>&nbsp;</slot>
     <div class="x-cell-right">
       <slot name="right"></slot>
       <x-icon v-if="iconRight" :type="iconRight"></x-icon>
@@ -29,6 +30,7 @@
         type: Boolean,
         default: true
       },
+      title: String,
       bordered: Boolean,
       icon: String,
       iconRight: String

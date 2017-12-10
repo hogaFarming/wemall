@@ -1,16 +1,16 @@
 <template>
   <div class="comment-short-list">
     <div class="mod bar bdb" @click="seeAllComments">
-      <span>{{ '评价 (' + commentsCount + ')' }}</span>
+      <span>{{ '评价 (' + total + ')' }}</span>
       <div class="bar-right">
-        <span>{{ '好评度' + commentsGoodPercent + '%' }}</span>
+        <span>好评度{{ goodPercent | percent }}</span>
         <x-icon type="next_page"></x-icon>
       </div>
     </div>
     <div class="mod bdb">
       <ul class="comment-list">
-        <li>
-          <comment-item></comment-item>
+        <li v-for="comment in comments.slice(0, 1)">
+          <comment-item :data="comment"></comment-item>
         </li>
       </ul>
     </div>
@@ -22,7 +22,7 @@
 </template>
 <script>
   export default {
-    props: ['comments', 'commentsCount', 'commentsGoodPercent'],
+    props: ['comments', 'total', 'goodPercent'],
     methods: {
       seeAllComments: function () {
         location.href = 'comments.html'

@@ -66,7 +66,7 @@
 </style>
 <script>
   import { Verify } from 'hanzi-mobile-package'
-  import auth from '../../utils/auth'
+  import auth from '../../core/authorization'
   export default {
     data () {
       return {

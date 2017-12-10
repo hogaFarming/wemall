@@ -1,6 +1,6 @@
 <template>
   <span :style="{ color: color || '#333' }">
-    ￥<span :style="yuanStyle">{{ yuan }}</span>{{ decimals }}
+    ￥<span :style="yuanStyle">{{ yuan }}.</span>{{ decimals }}
   </span>
 </template>
 <script>
@@ -26,16 +26,13 @@
         }
       },
       yuan () {
-        if (!this.value && this.value !== 0) {
-          return '--'
-        }
-        return parseInt(this.value, 10) + ''
+        const val = this.$utils.toFixedPrice(this.value)
+        return val.replace(/\.\d+$/, '')
       },
       decimals () {
-        if (!this.value && this.value !== 0) {
-          return '--'
-        }
-        return '.' + this.value.toFixed(2).replace(/\d+\./, '')
+        const val = this.$utils.toFixedPrice(this.value)
+        if (val === '0') return '00'
+        return val.replace(/^\d+\./, '')
       }
     }
   }

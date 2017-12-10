@@ -1,8 +1,7 @@
-import cache from './cache'
-import request from './request'
-import log from './log'
-import url from './url'
-import router from '../router'
+import cache from 'utils/cache'
+import request from 'core/http'
+import log from 'utils/log'
+import utils from 'utils/common'
 
 export function getToken () {
   return cache.get('token')
@@ -37,7 +36,7 @@ export function check (option = {}, next) {
   }
 
   // 开发者
-  if (url.params('usertest')) return next()
+  if (utils.url.params('usertest')) return next()
 
   const loginStatus = cache.get('isLogin')
   if (!loginStatus) {
@@ -66,10 +65,10 @@ export function check (option = {}, next) {
   }
 }
 
-function updateToken () {
-  return request.get('/api/init').then(res => {
-    if (res.data.result) {
-      cache.set('token', res.data.token)
+export function updateToken () {
+  return request.get('/api/init').then(result => {
+    if (result.result) {
+      cache.set('token', result.token)
     } else {
       throw new Error('获取token失败')
     }
@@ -119,5 +118,6 @@ function isLogin (url, option, next) {
 
 export default {
   getToken,
+  updateToken,
   check
 }

@@ -1,13 +1,16 @@
 <template>
   <div class="label-radio">
-    <x-label
-      v-for="item in options"
-      :key="item[valueKey]"
-      :active="value === item[valueKey]"
-      :disabled="item.disabled"
-      @click="onClick(item)">
-      {{ item[labelKey] }}
-    </x-label>
+    <div class="label-radio-inner">
+      <x-label
+        class="label-radio-label"
+        v-for="item in options"
+        :key="item[valueKey]"
+        :active="value === item[valueKey]"
+        :disabled="item.disabled"
+        @click="onClick(item)">
+        {{ item[labelKey] }}
+      </x-label>
+    </div>
   </div>
 </template>
 <script>
@@ -33,6 +36,16 @@
 </script>
 <style>
   .label-radio {
-
+    overflow: hidden;
+  }
+  .label-radio::after {
+    content: '';
+    display: table;
+  }
+  .label-radio-inner {
+    margin-bottom: -0.2667rem;
+  }
+  .label-radio-label {
+    margin-bottom: 0.2667rem;
   }
 </style>

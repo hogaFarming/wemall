@@ -2,28 +2,40 @@
   <div class="comment">
     <div class="media">
       <div class="media-left">
-        <x-avatar size="small" src="xxx"></x-avatar>
+        <x-avatar size="small" :src="data.headimg"></x-avatar>
       </div>
       <div class="media-content">
-        <div class="title">su***g</div>
-        <div class="star star-3"></div>
+        <div class="title">{{ data.username }}</div>
+        <div :class="starCls"></div>
       </div>
-      <time class="media-right">2017-11-26 13:09:25</time>
+      <time class="media-right">{{ data.created_at * 1000 | fullTime }}</time>
     </div>
     <div class="content">
-      用了几天感觉肤色提亮了，效果很明显，赞。。。
+      {{ data.content }}
     </div>
-    <div class="picrow">
+    <div class="picrow" v-if="data.img_arr && data.img_arr.length">
       <ul>
-        <li><img src="/static/img/comment.png" alt="pic"></li>
-        <li><img src="/static/img/comment.png" alt="pic"></li>
-        <li><img src="/static/img/comment.png" alt="pic"></li>
-        <li><img src="/static/img/comment.png" alt="pic"></li>
+        <li v-for="item in data.img_arr" @click="seeImg(item, data.img_arr)">
+          <img :src="item" alt="pic">
+        </li>
       </ul>
     </div>
     <ul class="meta grey">
-      <li>规格：<span>50ML</span></li>
-      <li>购买日期：<span>2017-11-24</span></li>
+      <li>规格：<span>{{ data.sku_show_name }}</span></li>
+      <li>购买日期：<span>{{ data.order_sn | orderNs }}</span></li>
     </ul>
   </div>
 </template>
+<script>
+  export default {
+    props: ['data'],
+    computed: {
+      starCls () {
+        return {
+          star: true,
+          ['star-' + this.data.star]: true
+        }
+      }
+    }
+  }
+</script>
