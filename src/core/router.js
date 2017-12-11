@@ -8,7 +8,7 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    { path: '/', redirect: '/product/search' },
+    { path: '/', redirect: '/product/list' },
 
     // 登录
     { path: '/login', component: () => import('views/auth/login') },
