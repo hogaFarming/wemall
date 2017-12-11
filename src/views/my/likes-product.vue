@@ -33,8 +33,8 @@
       this.queryList()
     },
     methods: {
-      queryList () {
-        this.$http.withLoading('/api/goods/collects').then(res => {
+      queryList (nextPage) {
+        this.$http.withLoading(nextPage || '/api/goods/collects').then(res => {
           this.setListData(res.list)
         })
       },
