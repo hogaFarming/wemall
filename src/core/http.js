@@ -15,6 +15,7 @@ request.interceptors.request.use(config => {
   // debugger
   config.url = config.url.replace(/^\/api/, '//api.sc.shouyouhuyu.com/api')
   config.headers.common.Authorization = auth.getToken()
+  config.headers.common['X-ISAPI'] = 1
   if (config.headers.Authorization !== undefined) {
     config.headers.Authorization = auth.getToken()
   }
