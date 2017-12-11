@@ -3,16 +3,25 @@ import auth from './authorization'
 import { gotoLoginPage } from './router'
 import log from 'utils/log'
 
-axios.interceptors.request.use(config => {
+// const request = axios.create({
+//   baseURL: 'http://api.sc.shouyouhuyu.com',
+//   // timeout: 1000,
+//   headers: {'X-ISAPI': 1}
+// })
+
+const request = axios
+
+request.interceptors.request.use(config => {
+  // debugger
+  config.url = config.url.replace(/^\/api/, '//api.sc.shouyouhuyu.com/api')
   config.headers.common.Authorization = auth.getToken()
-  config.headers.common['X-ISAPI'] = 1
   if (config.headers.Authorization !== undefined) {
     config.headers.Authorization = auth.getToken()
   }
   return config
 })
 
-axios.interceptors.response.use(response => {
+request.interceptors.response.use(response => {
   return response.data
 }, error => {
   let errorMsg = '网络连接出错'
@@ -49,8 +58,6 @@ axios.interceptors.response.use(response => {
   err.response = error.response
   throw err
 })
-
-const request = axios
 
 request.withLoading = (...args) => {
   window.app.loading()
