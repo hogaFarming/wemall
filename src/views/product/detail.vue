@@ -7,7 +7,7 @@
           <img :src="url" alt="">
         </x-slider-item>
       </x-slider>
-      <x-icon class="product-like-icon" @click.native="likeGoods" type="praise"></x-icon>
+      <x-icon v-if="goodsInfo.is_collect === 0" class="product-like-icon" @click.native="likeGoods" type="praise"></x-icon>
       <x-icon class="product-share-icon" @click.native="shareGoods" type="share"></x-icon>
     </div>
 
@@ -99,7 +99,8 @@
         commentsTotal: 10,
         commentsGoodPercent: '',
         cartCount: 0,
-        recommends: []
+        recommends: [],
+        likePending: false
       }
     },
     computed: {
@@ -225,7 +226,17 @@
         return img ? img.path : ''
       },
       likeGoods () {
-
+        if (this.likePending) return
+        this.likePending = true
+        const data = { goods_id: this.id }
+        this.$http.post('/api/goods/collects', data).then(res => {
+          this.likePending = false
+          this.goodsInfo.is_collect = 1
+          this.$toast('收藏成功')
+        }, err => {
+          this.likePending = false
+          this.$toast(err.message)
+        })
       },
       shareGoods () {
 

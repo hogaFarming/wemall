@@ -17,6 +17,35 @@ export const popupMixin = {
   }
 }
 
+export const scrollListMixin = {
+  data () {
+    return {
+      nextPage: '',
+      list: [],
+      total: 0
+    }
+  },
+  computed: {
+    infiniteScrollDisabled () {
+      return !this.nextPage
+    }
+  },
+  methods: {
+    loadMore () {
+      this.queryList(this.nextPage)
+    },
+    setListData (list) {
+      if (list.current_page === 1) {
+        this.list = list.data
+      } else {
+        this.list = this.list.concat(list.data)
+      }
+      this.total = list.total
+      this.nextPage = list.next_page_url
+    }
+  }
+}
+
 export default {
   install (Vue, options) {
     Vue.mixin({
