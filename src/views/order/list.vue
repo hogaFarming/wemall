@@ -22,9 +22,12 @@
           共 {{ item.total_num }} 件商品，合计： <x-money :value="item.total_price"></x-money>
         </div>
         <div class="text-right order-btns">
-          <x-button @click.native="orderAction" pill inline ghost>删除订单</x-button>
-          <x-button @click.native="orderAction" pill inline ghost>查看物流</x-button>
-          <x-button @click.native="orderAction" type="primary" pill inline ghost>评价</x-button>
+          <x-button v-if="item.status === 3 ||item.status === 5 || item.status === 7" @click.native="deleteOrder(item)" pill inline ghost>删除订单</x-button>
+          <x-button v-if="item.status === 0" @click.native="gotoPay(item)" type="primary" pill inline ghost>去付款</x-button>
+          <x-button v-if="item.status === 0" @click.native="cancelOrder(item)" pill inline ghost>取消订单</x-button>
+          <x-button v-if="item.status === 2" @click.native="confirmOrder(item)" pill inline ghost>确认收货</x-button>
+          <x-button v-if="item.status === 3 && item.comment_status === 0" @click.native="gotoComment(item)" pill inline ghost>评价订单</x-button>
+          <x-button v-if="item.status === 2 || item.status === 3" @click.native="gotoDelivery(item)" pill inline ghost>查看物流</x-button>
         </div>
       </div>
     </div>
@@ -68,8 +71,23 @@
       toggleList (key) {
         console.log(key)
       },
-      orderAction () {
-        console.log('orderaction')
+      deleteOrder (item) {
+
+      },
+      gotoPay (item) {
+
+      },
+      cancelOrder (item) {
+
+      },
+      confirmOrder (item) {
+
+      },
+      gotoComment (item) {
+
+      },
+      gotoDelivery (item) {
+
       }
     },
     filters: {
