@@ -21,7 +21,7 @@
       </ul>
     </div>
     <ul class="meta grey">
-      <li>规格：<span>{{ data.sku_show_name }}</span></li>
+      <li>规格：<span>{{ data | goodsSkuName }}</span></li>
       <li>购买日期：<span>{{ data.order_sn | orderNs }}</span></li>
     </ul>
   </div>

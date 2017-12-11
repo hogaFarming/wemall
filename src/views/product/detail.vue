@@ -33,9 +33,11 @@
 
     <!--商品评论-->
     <comment-short-list
+      v-if="comments.length"
       :comments="comments"
       :total="commentsTotal"
       :good-percent="commentsGoodPercent"
+      :goods-id="id"
     ></comment-short-list>
 
     <!--同类推荐-->

@@ -22,10 +22,10 @@
 </template>
 <script>
   export default {
-    props: ['comments', 'total', 'goodPercent'],
+    props: ['comments', 'total', 'goodPercent', 'goodsId'],
     methods: {
       seeAllComments: function () {
-        location.href = 'comments.html'
+        this.$router.push(`/product/${this.goodsId}/comments`)
       }
     }
   }
