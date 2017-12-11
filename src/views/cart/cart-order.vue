@@ -16,7 +16,7 @@
 
     <!--订单商品-->
     <div class="goods-list">
-      <x-media-object v-for="item in goodsList" :pic="item.goods_cover" class="bdb" padding>
+      <x-media-object v-for="item in goodsList" :key="item.id" :pic="item.goods_cover" class="bdb" padding>
         {{ item.goods_title }}
         <span slot="secondary">{{ item.sku_show_name }}</span>
         <x-money slot="bottom-left" color="red" :value="item.sale_total_price"></x-money>

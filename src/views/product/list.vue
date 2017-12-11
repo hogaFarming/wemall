@@ -16,7 +16,7 @@
         <div
           class="search-result"
           v-infinite-scroll="loadMore"
-          infinite-scroll-disabled="infiniteScrollDistance"
+          infinite-scroll-disabled="infiniteScrollDisabled"
           infinite-scroll-distance="10">
           <x-card
             class="result-item"
@@ -86,7 +86,7 @@
       this.search(this.searchText)
     },
     computed: {
-      infiniteScrollDistance () {
+      infiniteScrollDisabled () {
         return !this.nextPage
       }
     },

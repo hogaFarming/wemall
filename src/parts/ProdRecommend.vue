@@ -5,10 +5,10 @@
     </div>
     <div class="mod suggest">
       <x-slider class="bdb" style="padding-bottom: 0.8rem;" indicator="dots" :length="slides.length">
-        <x-slider-item v-for="slide in slides">
+        <x-slider-item v-for="(slide, i) in slides" :key="i">
           <div class="grid">
-            <div class="row" v-for="row in slide">
-              <div class="col col-8" v-for="item in row">
+            <div class="row" v-for="(row, j) in slide" :key="j">
+              <div class="col col-8" v-for="(item, k) in row" :key="k">
                 <div class="card">
                   <div class="image">
                     <img :src="item.cover" alt="pic">

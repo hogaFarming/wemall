@@ -1,19 +1,5 @@
 import utils from 'utils/common'
-
-// 订单状态:0,待付款;1,待发货;2,待收货;3,已完成;4,售后中;5,已关闭;
-const ORDER_STATUS = {
-  0: '待付款',
-  1: '待发货',
-  2: '待收货',
-  3: '已完成',
-  4: '售后中',
-  5: '已关闭'
-}
-const GOODS_STATUS = {
-  1: '正常',
-  2: '已失效',
-  3: '已售罄'
-}
+import { ORDER_STATUS, GOODS_STATUS } from './constants'
 
 export default {
   install (Vue, options) {
@@ -26,6 +12,21 @@ export default {
       if (!value && value !== 0) return '--'
       if (value === 1) return ''
       return GOODS_STATUS[value] || '--'
+    })
+
+    Vue.filter('address', function (value) {
+      if (!value) return ''
+      const { province, city, district, address } = value
+      return [province, city, district, address].filter(i => !!i).join('')
+    })
+
+    Vue.filter('goodsSkuName', function (goods) {
+      if (!goods) return ''
+      let names = []
+      for (let k in goods.sku_name_arr) {
+        names.push(goods.sku_name_arr[k])
+      }
+      return names.join(' ')
     })
 
     /* 默认图片过滤 */

@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <x-media-object class="mgb" pic="/static/img/order.png" padding>
       物流状态： <span class="primary">物流运输中</span>
       <div slot="secondary">承运公司：顺丰快递</div>
@@ -11,7 +10,6 @@
 </template>
 <script>
   export default {
-    el: '#root',
     data: function () {
       return {
         events: [
