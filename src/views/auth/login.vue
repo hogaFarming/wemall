@@ -54,7 +54,8 @@
     data () {
       return {
         account: 13570503483,
-        password: '123456'
+        password: '123456',
+        backUrl: this.$route.query.callback || '/'
       }
     },
     mounted () {
@@ -68,6 +69,7 @@
         }
         this.$http.post('/api/logins', data).then(result => {
           this.$cache.set('isLogin', 1)
+          this.$router.push(this.backUrl)
         }, err => {
           this.$toast(err.message)
         })

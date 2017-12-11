@@ -8,9 +8,11 @@ import 'styles/main.scss'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+const root = new Vue({
   el: '#app',
   router: app.router,
   template: '<App/>',
   components: { App }
 })
+
+window.app.root = root

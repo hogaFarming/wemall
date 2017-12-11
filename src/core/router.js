@@ -74,11 +74,11 @@ const router = new Router({
  * @param callback {string|boolean}
  */
 export function gotoLoginPage (callback) {
-  let backUrl = ''
+  let backUrl = callback || '/'
   if (callback === true) {
-
+    backUrl = window.app.root.$route.fullPath
   }
-  router.push({ path: '/login', query: { callback } })
+  router.push({ path: '/login', query: { callback: backUrl } })
 }
 
 export default router
