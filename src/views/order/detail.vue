@@ -34,8 +34,8 @@
           </x-media-object>
           <x-cell v-if="order.status > 0">
             <div slot="right">
-              <x-button @click.native="applyRefund(goods, 0)" v-if="order.status === 1 && goods.status === 1" pill ghost inline>申请退款</x-button>
-              <x-button @click.native="applyRefund(goods, 1)" v-if="order.status > 1 && order.status < 5 && goods.status === 1" pill ghost inline>申请售后</x-button>
+              <x-button @click.native="applyRefund(goods, 1)" v-if="order.status === 1 && goods.status === 1" pill ghost inline>申请退款</x-button>
+              <x-button @click.native="applyRefund(goods, 2)" v-if="order.status > 1 && order.status < 5 && goods.status === 1" pill ghost inline>申请售后</x-button>
               <x-button @click.native="viewRefund(goods)" v-if="goods.status > 1" pill ghost inline>售后中</x-button>
             </div>
           </x-cell>
