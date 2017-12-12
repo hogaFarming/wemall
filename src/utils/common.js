@@ -392,6 +392,16 @@ const utils = {
     } else {
       return ''
     }
+  },
+
+  deleteObj (obj) {
+    const _obj = obj
+    for (let key in _obj) {
+      if (!_obj[key]) {
+        delete _obj.key
+      }
+    }
+    return _obj
   }
 }
 

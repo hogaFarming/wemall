@@ -30,8 +30,7 @@ const router = new Router({
     // 我的
     { path: '/my/home', component: () => import('views/my/home'), meta: { requireAuth: true } },
     { path: '/my/address', component: () => import('views/my/address'), meta: { requireAuth: true } },
-    { path: '/my/address/edit/:id', component: () => import('views/my/address-form'), meta: { requireAuth: true } },
-    { path: '/my/address/add', component: () => import('views/my/address-form'), meta: { requireAuth: true } },
+    { path: '/my/address/edit', component: () => import('views/my/address-form'), meta: { requireAuth: true } },
     { path: '/my/comments', component: () => import('views/my/comments'), meta: { requireAuth: true } },
     { path: '/my/likes/articles', component: () => import('views/my/likes-article'), meta: { requireAuth: true } },
     { path: '/my/likes/product', component: () => import('views/my/likes-product'), meta: { requireAuth: true } },

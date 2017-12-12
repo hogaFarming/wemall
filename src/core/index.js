@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import 'mint-ui/lib/style.css'
-import { Popup, Cell, CellSwipe, Lazyload, Navbar, TabItem, Field, Switch, MessageBox, InfiniteScroll, Indicator, Toast } from 'mint-ui'
+import { Popup, Picker, Cell, CellSwipe, Lazyload, Navbar, TabItem, Field, Switch, MessageBox, InfiniteScroll, Indicator, Toast } from 'mint-ui'
 import './vendors'
 import router from './router'
 import service from './service'
@@ -47,6 +47,7 @@ Vue.component(TabItem.name, TabItem)
 Vue.component(Field.name, Field)
 Vue.component(Switch.name, Switch)
 Vue.component(MessageBox.name, MessageBox)
+Vue.component(Picker.name, Picker);
 
 /**
  * 检查权限

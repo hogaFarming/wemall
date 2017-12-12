@@ -1,6 +1,6 @@
 <template>
   <div class="page order-confirm-page">
-    <x-cell v-if="address" class="address mgb" icon-right="next_page" @click.native="toggleAddress">
+    <x-cell v-if="address" class="address mgb" :class="{'address-is-default': !!address.is_default}" icon-right="next_page" @click.native="toggleAddress">
       <x-media-object class="address-location" icon="address" :padding="false" size="27px" push="22px">
         <p class="address-concat">
           <span>{{ address.consignee }}</span>
@@ -8,6 +8,7 @@
         </p>
         <p>{{ address.text }}</p>
       </x-media-object>
+      <div class="address-default-flag"></div>
       <div class="address-border"></div>
     </x-cell>
     <x-cell v-else class="mgb bdb" @click.native="toggleAddress" icon="select_ele" icon-right="next_page">
@@ -24,7 +25,7 @@
       </x-media-object>
     </div>
 
-    <x-field class="mgb" label="买家留言" v-model="note" placeholder="您可以给商家留言"></x-field>
+    <x-field class="mgb" label="买家留言" v-model="desc" placeholder="您可以给商家留言"></x-field>
 
     <!--快递-->
     <x-cell title="运费 (快递)">
@@ -87,14 +88,10 @@
 <script>
   export default {
     data: function () {
-      let cart = this.$route.query.cart
-      if (cart) {
-        cart = cart.split(',').map(i => ({cart_id: i}))
-      }
       return {
         loading: true,
         query: {
-          cart: cart || undefined,
+          cart: this.$route.query.cart || undefined,
           goods_id: this.$route.query.goods_id || undefined,
           sku_id: this.$route.query.sku_id || undefined,
           num: this.$route.query.num || undefined,
@@ -107,7 +104,7 @@
         goodsTotalNum: 0,
         orderData: {},
 
-        note: '',
+        desc: '', // TODO 选地址时保存数据
         ticketsVisible: false,
         prodPopupVisible: false,
         useIntegral: false
@@ -117,9 +114,14 @@
       address () {
         const addr = this.orderData && this.orderData.user_address
         if (addr) {
-          const {province, city, district, address} = addr
+          const {province, city, district, address, id} = addr
           const text = [province, city, district, address].filter(i => !!i).join('')
           addr.text = text
+          // 是否默认地址
+          const match = this.addressList.filter(i => i.id === id)[0]
+          if (match) {
+            addr.is_default = match.is_default
+          }
         }
         return addr
       },
@@ -139,7 +141,10 @@
 
       },
       fetchOrderData () {
-        const data = this.query
+        const data = {
+          ...this.query,
+          cart: this.getCartArr()
+        }
         return this.$http.withLoading({
           url: '/api/order/confirms',
           data: data,
@@ -162,7 +167,23 @@
         })
       },
       toggleAddress () {
+        // TODO address_id, coupon_id, coupon_goods_id
+        let query = this.query
+        query.type = 'order'
+        let data = {
+          // user_integral: this.user_integral,
+          // coupon_id: this.coupon_id,
+          // coupon_index: this.coupon_index,
+          // coupon_goods_id: this.coupon_goods_id,
+          // coupon_goods_index: this.coupon_goods_index,
+          desc: this.desc
+        }
+        query.data = encodeURIComponent(JSON.stringify(this.$utils.deleteObj(data)))
 
+        this.$router.push({
+          path: '/my/address',
+          query: query
+        })
       },
       showTickets () {
         if (!this.coupon.length) return
@@ -170,10 +191,12 @@
       },
       submitOrder () {
         // TODO address_id, coupon_id, coupon_goods_id
+        const cartArr = this.getCartArr()
         const data = {
           ...this.query,
+          cart: cartArr.length ? cartArr : undefined,
           address_id: this.address.id,
-          desc: this.note || undefined,
+          desc: this.desc || undefined,
           is_invoice: 0 // 写死不开发票
         }
         if (this.useIntegral) {
@@ -201,6 +224,10 @@
       },
       ticketConfirm () {
 
+      },
+      getCartArr () {
+        if (!this.query.cart) return []
+        return this.query.cart.split(',').map(i => ({cart_id: i}))
       }
     }
   }
@@ -209,11 +236,21 @@
   .page {
     font-size: 14px;
   }
-
   .address {
     position: relative;
   }
-
+  .address-default-flag {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background-image: url("/static/icon/ic_default.png");
+  }
+  .address-is-default .address-default-flag {
+    display: block;
+  }
   .address-border {
     position: absolute;
     bottom: 0;
@@ -223,11 +260,9 @@
     background-image: url("/static/icon/ic_mail_mark.png");
     background-repeat: repeat-x;
   }
-
   .cart-popup {
     width: 100%;
   }
-
   .cart-popup-title {
     text-align: center;
   }
