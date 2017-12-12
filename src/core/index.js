@@ -10,8 +10,10 @@ import globalMixin from './mixins'
 import filters from './filters'
 import cache from 'utils/cache'
 import utils from 'utils/common'
+import config from 'core/config'
 
 const app = window.app = { router }
+app.config = config
 
 Vue.use(filters)
 Vue.use(globalMixin)
@@ -53,7 +55,7 @@ router.beforeEach((to, from, next) => {
   // return next()
   if (!to.matched.some(record => record.meta.requireAuth)) return next()
 
-  if (utils.isWeChat()) {
+  if (false && utils.isWeChat()) {
     if (cache.get('isAuth') === '1' && cache.get('isLogin') === '1') {
       next()
       return

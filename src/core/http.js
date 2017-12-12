@@ -13,7 +13,7 @@ const request = axios
 
 request.interceptors.request.use(config => {
   // debugger
-  config.url = config.url.replace(/^\/api/, '//api.sc.shouyouhuyu.com/api')
+  config.url = config.url.replace(/^\/api/, `${app.config.api.url}/api`)
   config.headers.common.Authorization = auth.getToken()
   config.headers.common['X-ISAPI'] = 1
   if (config.headers.Authorization !== undefined) {

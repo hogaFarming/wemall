@@ -19,7 +19,8 @@
       <x-media-object v-for="item in goodsList" :key="item.id" :pic="item.goods_cover" class="bdb" padding>
         {{ item.goods_title }}
         <span slot="secondary">{{ item.sku_show_name }}</span>
-        <x-money slot="bottom-left" color="red" :value="item.sale_total_price"></x-money>
+        <x-money slot="bottom-left" color="red" :value="item.sale_price"></x-money>
+        <span slot="bottom-right">x{{ item.num }}</span>
       </x-media-object>
     </div>
 
@@ -86,11 +87,19 @@
 <script>
   export default {
     data: function () {
-      const cart = this.$route.query.cart
-      const carts = cart ? cart.split(',') : []
+      let cart = this.$route.query.cart
+      if (cart) {
+        cart = cart.split(',').map(i => ({cart_id: i}))
+      }
       return {
         loading: true,
-        carts: carts,
+        query: {
+          cart: cart || undefined,
+          goods_id: this.$route.query.goods_id || undefined,
+          sku_id: this.$route.query.sku_id || undefined,
+          num: this.$route.query.num || undefined,
+          address_id: this.$route.query.address_id || undefined
+        },
         addressList: [],
         coupon: [],
         capital: {},
@@ -130,9 +139,7 @@
 
       },
       fetchOrderData () {
-        const data = {
-          cart: this.carts.map(i => ({cart_id: i}))
-        }
+        const data = this.query
         return this.$http.withLoading({
           url: '/api/order/confirms',
           data: data,
@@ -164,7 +171,7 @@
       submitOrder () {
         // TODO address_id, coupon_id, coupon_goods_id
         const data = {
-          cart: this.carts.map(i => ({ cart_id: i })),
+          ...this.query,
           address_id: this.address.id,
           desc: this.note || undefined,
           is_invoice: 0 // 写死不开发票

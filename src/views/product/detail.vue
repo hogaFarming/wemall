@@ -3,7 +3,7 @@
     <!--轮播图-->
     <div class="top-slider-wrap bdb">
       <x-slider class="bdb" indicator="number" :length="swipeImgs.length">
-        <x-slider-item v-for="url in swipeImgs" :key="url">
+        <x-slider-item v-for="url in swipeImgs" @click.native="seeImg(url, swipeImgs)" :key="url">
           <img :src="url" alt="">
         </x-slider-item>
       </x-slider>
@@ -14,7 +14,7 @@
     <!--商品标题-->
     <div class="mod_pd mgb prod-info">
       <p class="title black-2 fs-lg">{{ goodsInfo.goods_title }}</p>
-      <x-money class="price" :value="selectedSku.sale_price" size="large"></x-money>
+      <x-money v-if="selectedSku.sale_price" class="price" :value="selectedSku.sale_price" size="large"></x-money>
       <!--<x-money v-else class="price" :value="399" size="large"></x-money>-->
     </div>
 
@@ -270,7 +270,32 @@
         this.$router.push({ path: '/cart' })
       },
       buyNow () {
-
+        if (this.goodsInfo.is_sku === 0) {
+          this.$router.push({
+            path: '/cart/order',
+            query: {
+              goods_id: this.query.goods_id,
+              sku_id: this.goodsInfo.skus[0].id,
+              num: 1 // TODO 立即购买数量
+            }
+          })
+        } else {
+          const sku = this.selectedSku
+          if (!sku.id) {
+            return this.$toast('请选择规格')
+          }
+          if (sku.stock <= 0) {
+            return this.$toast('库存不足')
+          }
+          this.$router.push({
+            path: '/cart/order',
+            query: {
+              goods_id: this.id,
+              sku_id: this.skuValue.skuId,
+              num: this.skuValue.amount
+            }
+          })
+        }
       },
       showProdCombo () {
         this.comboVisible = true

@@ -7,8 +7,11 @@ Vue.use(Router)
 // const ViewsIndex = () => import('views/index')
 
 const router = new Router({
+  mode: 'history',
   routes: [
-    { path: '/', redirect: '/product/list' },
+    { path: '/', redirect: '/home' },
+
+    { path: '/home', component: () => import('views/home/home') },
 
     // 登录
     { path: '/login', component: () => import('views/auth/login') },
@@ -23,8 +26,6 @@ const router = new Router({
     { path: '/cart', component: () => import('views/cart/cart'), meta: { requireAuth: true } },
     { path: '/cart/order', component: () => import('views/cart/cart-order'), meta: { requireAuth: true } },
     { path: '/cart/pay', component: () => import('views/cart/pay'), meta: { requireAuth: true } },
-
-    { path: '/home', component: () => import('views/home/home') },
 
     // 我的
     { path: '/my/home', component: () => import('views/my/home'), meta: { requireAuth: true } },

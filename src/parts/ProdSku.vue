@@ -40,9 +40,9 @@
       </div>
       <div class="sku-foot">
         <x-button-group class="sku-button">
-          <x-button type="primary" v-show="showingButton.cart" @click.native="$emit('cart')" :disabled="!isOk">加入购物车</x-button>
-          <x-button type="danger" v-show="showingButton.buy" @click.native="$emit('buy')" :disabled="!isOk">立即购买</x-button>
-          <x-button type="danger" v-show="showingButton.confirm" @click.native="$emit('confirm')" :disabled="!isOk">确定</x-button>
+          <x-button type="primary" v-show="showingButton.cart" @click.native="$emit('cart')">加入购物车</x-button>
+          <x-button type="danger" v-show="showingButton.buy" @click.native="$emit('buy')">立即购买</x-button>
+          <x-button type="danger" v-show="showingButton.confirm" @click.native="$emit('confirm')">确定</x-button>
         </x-button-group>
       </div>
     </div>

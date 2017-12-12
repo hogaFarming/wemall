@@ -11,7 +11,7 @@ const utils = {
   isWeChat: function () {
     var ua = window.navigator.userAgent.toLowerCase()
     if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-      return false
+      return true
     } else {
       return false
     }

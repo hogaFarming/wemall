@@ -39,26 +39,27 @@ export function check (option = {}, next) {
   if (utils.url.params('usertest')) return next()
 
   const loginStatus = cache.get('isLogin')
-  if (!loginStatus) {
+  if (!loginStatus || loginStatus === '0') {
     if (data.isRedirect === 1 && data.type === 'login') {
       next({
         path: data.redirectUrl,
         query: { callback: data.callbackUrl }
       })
     } else if (data.type === 'wechatOauth') {
-      if (cache.get('isAuth')) return next()
+      const isAuth = cache.get('isAuth')
+      if (isAuth === '1') return next()
       const callback = location.origin + data.callbackUrl
-      let url = 'window.config.api.url' + data.redirectUrl +
+      let url = app.config.api.url + data.redirectUrl +
         '?callback=' + (encodeURIComponent(callback)) +
         '&token=' + getToken() +
         '&type=' + 'mp'
-      if (url.params('usertest')) {
-        url += '&usertest=' + url.params('usertest')
+      if (utils.url.params('usertest')) {
+        url += '&usertest=' + utils.url.params('usertest')
       }
       cache.set('isLogin', 2)
       window.location.href = url
     }
-  } else if (loginStatus === 2) {
+  } else if (loginStatus === '2') {
     isLogin('/api/judge/logins', option, next)
   } else {
     typeof next === 'function' && next()
