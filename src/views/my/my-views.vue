@@ -1,6 +1,5 @@
 <template>
-  <div>
-
+  <div class="page my-views-page">
     <x-cell>
       共找到4个足迹
       <x-button slot="right" @click.native="toggleEdit" inline pill>{{ isEdit ? '完成' : '编辑' }}</x-button>
@@ -25,26 +24,10 @@
     </x-fixed-bottom>
   </div>
 </template>
-<style>
-  .page {
-    font-size: 14px;
-  }
-  .myfoot-list {
-    overflow: hidden;
-    padding: 0 0.27rem;
-    /*margin-bottom: -0.25rem;*/
-  }
-  .myfoot-item {
-    float: left;
-    margin-right: 0.4rem;
-    margin-bottom: 0.25rem;
-  }
-  .myfoot-item:nth-child(2n) {
-    margin-right: 0;
-  }
-</style>
 <script>
+  import { scrollListMixin } from 'core/mixins'
   export default {
+    mixins: [scrollListMixin],
     data: function () {
       return {
         isEdit: false,
@@ -61,7 +44,15 @@
         return true
       }
     },
+    mounted () {
+      this.queryList()
+    },
     methods: {
+      queryList (nextPage) {
+        this.$http.withLoading(nextPage || '/api/history/goodses').then(res => {
+          this.setListData(res.list)
+        })
+      },
       deleteGoods: function (id) {
         console.log('delete ' + id)
       },
@@ -85,3 +76,21 @@
     }
   }
 </script>
+<style>
+  .page {
+    font-size: 14px;
+  }
+  .myfoot-list {
+    overflow: hidden;
+    padding: 0 0.27rem;
+    /*margin-bottom: -0.25rem;*/
+  }
+  .myfoot-item {
+    float: left;
+    margin-right: 0.4rem;
+    margin-bottom: 0.25rem;
+  }
+  .myfoot-item:nth-child(2n) {
+    margin-right: 0;
+  }
+</style>

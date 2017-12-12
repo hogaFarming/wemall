@@ -2,7 +2,7 @@
   <div class="page article-page">
     <div v-if="article">
       <x-cell class="article-title bdb">
-        <p class="mgb">{{ article.title }}</p>
+        <p class="mgb" style="line-height: 1.25;">{{ article.title }}</p>
         <p class="black-3 fs-sm"><time>{{ article.created_at * 1000 | fullTime }}</time></p>
       </x-cell>
       <div class="article-content">

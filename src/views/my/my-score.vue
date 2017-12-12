@@ -1,6 +1,5 @@
 <template>
-  <div>
-
+  <div class="page my-score-page">
     <x-media-object class="score-banner" icon="integral" size="1.6rem" pull="0.1rem" padding>
       <div style="color: #ffffff;">
         <span style="font-size: 16px;">积分余额</span>
@@ -33,6 +32,25 @@
     </div>
   </div>
 </template>
+<script>
+  import { scrollListMixin } from 'core/mixins'
+  export default {
+    mixins: [scrollListMixin],
+    data () {
+      return {}
+    },
+    mounted () {
+      this.queryList()
+    },
+    methods: {
+      queryList (nextPage) {
+        this.$http.withLoading(nextPage || '/api/user/integral/logs').then(res => {
+          this.setListData(res.list)
+        })
+      }
+    }
+  }
+</script>
 <style>
   .page {
     font-size: 14px;

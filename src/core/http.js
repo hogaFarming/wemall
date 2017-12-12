@@ -27,7 +27,7 @@ request.interceptors.response.use(response => {
 }, error => {
   let errorMsg = '网络连接出错'
   let errorCode = 'Network Error'
-  if (error.response && error.response.data) {
+  if (error.response && error.response.data && error.response.data.error_code) {
     errorMsg = error.response.data.error_msg
     errorCode = error.response.data.error_code
 
