@@ -1,19 +1,23 @@
 <template>
   <div class="page my-views-page">
     <x-cell>
-      共找到4个足迹
+      共找到{{ itemTotal }}个足迹
       <x-button slot="right" @click.native="toggleEdit" inline pill>{{ isEdit ? '完成' : '编辑' }}</x-button>
     </x-cell>
-    <div style="margin: 0.3733rem 0.48rem;font-size: 12px;color: #999999">11月15日</div>
-    <div class="myfoot-list">
-      <x-card class="myfoot-item" pic="/static/img/order.png" pic-width="4.53rem" pic-height="4.2667rem">
-        <span>2017年新款茶灵春季茶灵茶灵面膜50ml 提...</span>
-        <x-money :value="158" slot="meta"></x-money>
-        <div slot="extra">
-          <x-checkbox v-if="isEdit" :value="selectedItems[0]" @input="toggleSelect(0)"></x-checkbox>
-          <x-icon v-else type="delete_goods" @click.native="deleteGoods(0)" style="width: 25px;height: 25px;"></x-icon>
-        </div>
-      </x-card>
+    <div v-if="list.length">
+      <div v-for="item in list">
+        <div style="margin: 0.3733rem 0.48rem;font-size: 12px;color: #999999">{{ item.month }}</div>
+        <x-card-list>
+          <x-card v-for="goods in item.list" :key="goods.id" :pic="goods.cover" pic-height="4.2667rem">
+            <span>{{ goods.name }}</span>
+            <x-money :value="goods.price" slot="meta"></x-money>
+            <div slot="extra">
+              <x-checkbox v-if="isEdit" :value="selectedItems[goods.id]" @input="toggleSelect(goods.id)"></x-checkbox>
+              <x-icon v-else type="delete_goods" @click.native="deleteGoods(goods.id)" style="width: 25px;height: 25px;"></x-icon>
+            </div>
+          </x-card>
+        </x-card-list>
+      </div>
     </div>
     <x-fixed-bottom v-if="isEdit" style="font-size: 14px;">
       <x-cell slot="content">
@@ -25,53 +29,80 @@
   </div>
 </template>
 <script>
-  import { scrollListMixin } from 'core/mixins'
   export default {
-    mixins: [scrollListMixin],
-    data: function () {
+    data () {
       return {
         isEdit: false,
-        selectedItems: {
-          0: false
-        }
+        list: [],
+        selectedItems: {}
       }
     },
     computed: {
-      isAllSelected: function () {
-        for (var key in this.selectedItems) {
-          if (!this.selectedItems[key]) return false
-        }
-        return true
+      isAllSelected () {
+        const result = this.list.every(item => item.list.every(i => !!this.selectedItems[i.id]))
+        return result
+      },
+      itemTotal () {
+        if (!this.list) return 0
+        let ret = 0
+        this.list.forEach(item => {
+          ret += item.list.length
+        })
+        return ret
       }
     },
     mounted () {
       this.queryList()
     },
     methods: {
-      queryList (nextPage) {
-        this.$http.withLoading(nextPage || '/api/history/goodses').then(res => {
-          this.setListData(res.list)
+      queryList () {
+        this.$http.withLoading('/api/history/goodses').then(res => {
+          this.list = res.list
         })
       },
-      deleteGoods: function (id) {
-        console.log('delete ' + id)
+      deleteGoods (id) {
+        this.$http.withLoading({
+          url: '/api/history/goodses',
+          data: { history_ids: id },
+          method: 'delete'
+        }).then(res => {
+          this.$toast('删除成功')
+          this.queryList()
+        })
       },
-      toggleEdit: function () {
+      toggleEdit () {
         this.isEdit = !this.isEdit
       },
-      deleteAll: function () {
-
+      deleteAll () {
+        const ids = Object.keys(this.selectedItems).filter(key => this.selectedItems[key])
+        if (!ids.length) return this.$toast('未选中足迹')
+        this.$messagebox.confirm('确认删除足迹?').then(action => {
+          if (action === 'cancel') return
+          this.$http.withLoading({
+            url: '/api/history/goodses',
+            data: { history_ids: ids.join(',') },
+            method: 'delete'
+          }).then(res => {
+            this.$toast('删除成功')
+            this.queryList()
+            this.isEdit = false
+          })
+        })
       },
-      toggleSelect: function (id) {
-        // var newSelectedItems = {}
-        // newSelectedItems[id] = !this.selectedItems[id]
-        // this.selectedItems = newSelectedItems
-        this.selectedItems[id] = !this.selectedItems[id]
-      },
-      toggleSelectAll: function (flag) {
-        for (var key in this.selectedItems) {
-          this.selectedItems[key] = flag
+      toggleSelect (id) {
+        this.selectedItems = {
+          ...this.selectedItems,
+          [id]: !this.selectedItems[id]
         }
+      },
+      toggleSelectAll (val) {
+        const selectedItems = {}
+        this.list.forEach(item => {
+          item.list.forEach(i => {
+            selectedItems[i.id] = val
+          })
+        })
+        this.selectedItems = selectedItems
       }
     }
   }
@@ -79,18 +110,5 @@
 <style>
   .page {
     font-size: 14px;
-  }
-  .myfoot-list {
-    overflow: hidden;
-    padding: 0 0.27rem;
-    /*margin-bottom: -0.25rem;*/
-  }
-  .myfoot-item {
-    float: left;
-    margin-right: 0.4rem;
-    margin-bottom: 0.25rem;
-  }
-  .myfoot-item:nth-child(2n) {
-    margin-right: 0;
   }
 </style>
