@@ -1,11 +1,11 @@
 <template>
   <div class="page home-page">
-    <x-cell class="bdb" @click.native="gotoList">
+    <x-cell class="bdb" @click.native="gotoSearch">
       <x-icon type="search"></x-icon> 搜索
     </x-cell>
     <!--轮播图-->
     <div class="top-slider-wrap bdb">
-      <x-slider class="bdb" indicator="number" :length="banners.length">
+      <x-slider class="bdb" indicator="dots" :length="banners.length">
         <x-slider-item v-for="item in banners" :key="item.id">
           <img :src="item.cover" alt="item.title" @click="toLink(item.link)">
         </x-slider-item>
@@ -36,8 +36,8 @@
           this.covers = res.list.cover_list
         })
       },
-      gotoList () {
-        this.$router.push('/product/list')
+      gotoSearch () {
+        this.$router.push('/product/search')
       },
       toLink (link) {
         if (!link) return

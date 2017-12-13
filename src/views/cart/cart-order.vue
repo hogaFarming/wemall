@@ -92,10 +92,10 @@
         loading: true,
         query: {
           cart: this.$route.query.cart || undefined,
-          goods_id: this.$route.query.goods_id || undefined,
-          sku_id: this.$route.query.sku_id || undefined,
-          num: this.$route.query.num || undefined,
-          address_id: this.$route.query.address_id || undefined
+          goods_id: this.routeQueryId('goods_id'),
+          sku_id: this.routeQueryId('sku_id'),
+          num: this.routeQueryId('num'),
+          address_id: this.routeQueryId('address_id')
         },
         addressList: [],
         coupon: [],
@@ -145,6 +145,7 @@
           ...this.query,
           cart: this.getCartArr()
         }
+        if (!data.cart.length) data.cart = undefined
         return this.$http.withLoading({
           url: '/api/order/confirms',
           data: data,

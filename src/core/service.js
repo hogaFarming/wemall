@@ -1,8 +1,15 @@
 import cache from '../utils/cache'
 
 export function pushHistorySearch (words) {
-  const historySearch = getHistorySearch()
-  historySearch.push(words)
+  if (!words || typeof words !== 'string') return
+  let historySearch = getHistorySearch()
+  console.log(historySearch.indexOf(words))
+  if (historySearch.indexOf(words) === -1) {
+    historySearch.push(words)
+  } else {
+    historySearch = historySearch.filter(item => item !== words)
+    historySearch.push(words)
+  }
   cache.set('historySearch', JSON.stringify(historySearch))
 }
 export function queryHistorySearch () {

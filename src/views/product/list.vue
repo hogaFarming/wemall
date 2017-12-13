@@ -109,6 +109,7 @@
             this.queries.start_price = 0
           }
         }
+        this.$service.pushHistorySearch(this.queries.goods_name)
         this.queryList()
       },
       loadMore () {

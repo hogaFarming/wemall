@@ -402,6 +402,12 @@ const utils = {
       }
     }
     return _obj
+  },
+
+  toId (val) {
+    if (val === 0) return 0
+    if (!val) return undefined
+    return +val
   }
 }
 

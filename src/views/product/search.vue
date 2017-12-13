@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page product-search-page">
     <x-cell>
       <x-search v-model.trim="keyword" @search="onSearch"></x-search>
     </x-cell>
@@ -15,15 +15,15 @@
         </x-label>
       </div>
     </div>
-    <div class="pd">
+    <div class="pd" v-if="historySearch.length">
       <div style="color: #999999;margin-bottom: 15px;">搜索历史</div>
       <div class="label-list">
         <x-label
           v-for="item in historySearch"
-          :key="item.keyword"
+          :key="item"
           style="background-color: #dddddd;"
-          @click.native="onSearch(item.keyword)">
-          {{ item.label }}
+          @click.native="onHotSearch(item)">
+          {{ item }}
         </x-label>
       </div>
     </div>
@@ -40,6 +40,7 @@
     },
     mounted () {
       this.fetchHotWords()
+      this.queryHistorySearch()
     },
     methods: {
       fetchHotWords () {

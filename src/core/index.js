@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
   // return next()
   if (!to.matched.some(record => record.meta.requireAuth)) return next()
 
-  if (false && utils.isWeChat()) {
+  if (utils.isWeChat()) {
     if (cache.get('isAuth') === '1' && cache.get('isLogin') === '1') {
       next()
       return

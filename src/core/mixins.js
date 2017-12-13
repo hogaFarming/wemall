@@ -50,6 +50,12 @@ export default {
   install (Vue, options) {
     Vue.mixin({
       methods: {
+        routeQueryId (key) {
+          const val = this.$route.query[key]
+          if (!val) return undefined
+          if (val === 'null' || val === 'undefined') return undefined
+          return +val
+        },
         /* 默认图片过滤 */
         thumbnail: utils.thumbnail,
         toThumbnail: utils.toThumbnail,

@@ -25,7 +25,7 @@
         <span class="red">优惠套装</span>
         <span>| 最高省200.00元</span>
       </x-cell>
-      <x-cell v-if="goodsInfo.is_sku" icon-right="more" @click.native="showSku">
+      <x-cell v-if="goodsInfo.is_sku" icon-right="more" @click.native="showSku()">
         <span class="black-3">已选规格：</span>
         <span>{{ selectedSkuText }}</span>
       </x-cell>
@@ -68,7 +68,9 @@
       @input="skuValueChange"
       :sku-model="skuModel"
       @cart="addCart"
-      @buy="buyNow">
+      @buy="buyNow"
+      @confirm="confirmBuyNow"
+      :buttons="skuButtons">
     </prod-sku>
     <!--优惠套装弹层-->
     <prod-combo
@@ -89,6 +91,7 @@
 
         goodsInfo: {},
 
+        skuButtons: ['cart', 'buy'],
         skuVisible: false,
         skuModel: null,
         skuValue: null,
@@ -258,7 +261,7 @@
             sku_id: skuId
           }
         }).then(res => {
-          this.$toast('已加入购物车')
+          this.$toast('成功加入购物车')
           this.$nextTick(() => {
             this.cartCount += 1
             this.skuVisible = false
@@ -280,34 +283,39 @@
             }
           })
         } else {
-          const sku = this.selectedSku
-          if (!sku.id) {
-            return this.$toast('请选择规格')
-          }
-          if (sku.stock <= 0) {
-            return this.$toast('库存不足')
-          }
-          this.$router.push({
-            path: '/cart/order',
-            query: {
-              goods_id: this.id,
-              sku_id: this.skuValue.skuId,
-              num: this.skuValue.amount
-            }
-          })
+          this.showSku(true)
         }
+      },
+      confirmBuyNow () {
+        const sku = this.selectedSku
+        if (!sku.id) {
+          return this.$toast('请选择规格')
+        }
+        if (sku.stock <= 0) {
+          return this.$toast('库存不足')
+        }
+        this.$router.push({
+          path: '/cart/order',
+          query: {
+            goods_id: this.id,
+            sku_id: this.skuValue.skuId,
+            num: this.skuValue.amount
+          }
+        })
       },
       showProdCombo () {
         this.comboVisible = true
       },
-      showSku () {
+      showSku (isBuyNow) {
+        if (isBuyNow === true) {
+          this.skuButtons = ['confirm']
+        } else {
+          this.skuButtons = ['buy', 'cart']
+        }
         this.skuVisible = true
       },
-      resetSku () {
-
-      },
-      skuVisibleChange (evt) {
-        this.skuVisible = evt
+      skuVisibleChange (val) {
+        this.skuVisible = val
       },
       skuValueChange (evt) {
         this.skuValue = evt

@@ -49,6 +49,7 @@
   </mt-popup>
 </template>
 <script>
+  // TODO 动态设置sku的disabled状态
   import { popupMixin } from 'core/mixins'
   export default {
     mixins: [popupMixin],
