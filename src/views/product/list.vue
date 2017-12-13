@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page product-list-page">
     <x-cell class="bdb">
       <x-search v-model="searchText" @search="search"></x-search>
     </x-cell>
@@ -8,18 +8,17 @@
       <mt-tab-item :id="2">价格 <x-icon type="arrow_price"></x-icon></mt-tab-item>
       <mt-tab-item :id="3">筛选 <x-icon type="filter"></x-icon></mt-tab-item>
     </x-navbar>
-    <div>
+    <div v-if="!loading">
       <div v-if="list.length">
         <div class="black-3" style="padding: 0 0.27rem 0.32rem;">
           {{ queries.goods_name }}-找到 {{ total }} 个结果
         </div>
-        <div
-          class="search-result"
+        <x-card-list
+          :cols="2"
           v-infinite-scroll="loadMore"
           infinite-scroll-disabled="infiniteScrollDisabled"
           infinite-scroll-distance="10">
           <x-card
-            class="result-item"
             v-for="item in list"
             :key="item.id"
             :pic="thumbnail(item.cover, 300)"
@@ -29,7 +28,11 @@
             <span>{{ item.name }}</span>
             <x-money :value="item.sale_price" slot="meta" color="red"></x-money>
           </x-card>
-        </div>
+        </x-card-list>
+      </div>
+      <div v-else style="text-align: center;">
+        <p style="padding: 1rem 0 0.4rem"><img src="/static/icon/img_list_empty.png" alt=""></p>
+        <p class="black-3">什么都没有找到，换个词再试试！</p>
       </div>
     </div>
     <mt-popup class="filter-popup" position="right" :value="filterVisible" @input="onFilterVisibleChange">
@@ -62,10 +65,12 @@
   </div>
 </template>
 <script>
+  import { scrollListMixin } from 'core/mixins'
   export default {
+    mixins: [scrollListMixin],
     data: function () {
       return {
-        nextPage: '',
+        loading: true,
         searchText: this.$route.query.goods_name || '',
         currentTab: 1,
         priceDir: 1,
@@ -74,8 +79,6 @@
         endPrice: undefined,
 
         queries: {},
-        total: 0,
-        list: [],
 
         filterVisible: false,
         filterBrands: [],
@@ -86,9 +89,6 @@
       this.search(this.searchText)
     },
     computed: {
-      infiniteScrollDisabled () {
-        return !this.nextPage
-      }
     },
     methods: {
       search () {
@@ -112,12 +112,6 @@
         this.$service.pushHistorySearch(this.queries.goods_name)
         this.queryList()
       },
-      loadMore () {
-        this.queryList(this.nextPage)
-      },
-      reloadList () {
-        this.queryList()
-      },
       /**
        * 查询列表
        */
@@ -131,13 +125,8 @@
         }
         this.$http.withLoading(options)
           .then(result => {
-            if (result.list.current_page === 1) {
-              this.list = result.list.data
-            } else {
-              this.list = this.list.concat(result.list.data)
-            }
-            this.total = result.list.total
-            this.nextPage = result.list.next_page_url
+            this.loading = false
+            this.setListData(result.list)
           })
       },
       queryCategories () {
@@ -146,7 +135,7 @@
             this.categories = result.list
           })
       },
-      onTabChange: function (tabId) {
+      onTabChange (tabId) {
         switch (tabId) {
           case 1:
             if (this.currentTab === 1) return

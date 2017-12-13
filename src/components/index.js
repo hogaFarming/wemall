@@ -27,6 +27,7 @@ import Field from './Field.vue'
 import Checkbox from './Checkbox.vue'
 import Modal from './Modal.vue'
 import Card from './Card.vue'
+import CardList from './CardList.vue'
 import Search from './Search.vue'
 import Page from './Page.vue'
 
@@ -58,5 +59,6 @@ Vue.component(Field.name, Field)
 Vue.component(Checkbox.name, Checkbox)
 Vue.component(Modal.name, Modal)
 Vue.component(Card.name, Card)
+Vue.component(CardList.name, CardList)
 Vue.component(Search.name, Search)
 Vue.component(Page.name, Page)

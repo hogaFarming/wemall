@@ -10,7 +10,7 @@ export function pushHistorySearch (words) {
     historySearch = historySearch.filter(item => item !== words)
     historySearch.push(words)
   }
-  cache.set('historySearch', JSON.stringify(historySearch))
+  cache.set('historySearch', JSON.stringify(historySearch.slice(0, 10)))
 }
 export function queryHistorySearch () {
   return Promise.resolve(getHistorySearch())

@@ -4,30 +4,29 @@
       <mt-tab-item :id="1">晒单</mt-tab-item>
       <mt-tab-item :id="2">文章</mt-tab-item>
     </x-navbar>
-    <div v-if="currentTab === 1" class="card-list">
+    <x-card-list v-if="currentTab === 1">
       <x-card
-        class="card-list-item"
         v-for="item in list"
         :key="item.id"
         :pic="item.goods_cover"
         @click.native="gotoProduct(item)"
-        pic-width="4.53rem"
         pic-height="4.2667rem">
         <p class="black-3 mgb">{{ item.comment }}</p>
-        <x-media-object :pic="item.headimg" size="30px">
+        <x-media-object class="shares-comment">
+          <div slot="left">
+            <x-avatar :src="item.headimg" size="30px"></x-avatar>
+          </div>
           <div>{{ item.username }}</div>
           <div class="star" :class="{['star-' + item.star]: true}"></div>
         </x-media-object>
         <div>{{ item.goods_name }}</div>
       </x-card>
-    </div>
-    <div v-if="currentTab === 2" class="card-list">
+    </x-card-list>
+    <x-card-list v-if="currentTab === 2">
       <x-card
-        class="card-list-item"
         v-for="item in list"
         :key="item.id"
         :pic="item.cover"
-        pic-width="4.53rem"
         pic-height="4.2667rem">
         <p class="black-3 mgb" @click="gotoArticle(item)">{{ item.author }}</p>
         <div>
@@ -35,7 +34,7 @@
           <span style="vertical-align: middle">{{ item.collect_num }}</span>
         </div>
       </x-card>
-    </div>
+    </x-card-list>
   </div>
 </template>
 <script>
@@ -46,7 +45,7 @@
       return {
         cacheList: [],
         cacheNextPage: '',
-        currentTab: 2
+        currentTab: 1
       }
     },
     watch: {
@@ -89,3 +88,8 @@
     }
   }
 </script>
+<style>
+  .x-media.shares-comment .image {
+    border: none;
+  }
+</style>

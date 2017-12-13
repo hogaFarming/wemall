@@ -11,10 +11,10 @@
       <slot v-else name="left"></slot>
     </div>
     <div class="x-media-content">
-      <div class="x-media-content-title" v-if="title">
+      <div class="x-media-content-title two-line" v-if="title">
         {{ title }}
       </div>
-      <div class="x-media-content-title" v-else>
+      <div class="x-media-content-title two-line" v-else>
         <slot></slot>
       </div>
       <div class="x-media-content-desc">
@@ -149,5 +149,10 @@
   }
   .x-media-content-br {
     right: 0;
+  }
+
+  .x-media-content-title.two-line {
+    height: auto;
+    /*max-height: 2em;*/
   }
 </style>

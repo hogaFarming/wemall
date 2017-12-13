@@ -14,7 +14,7 @@
           normal: '1.3333rem',
           large: '2.1333rem'
         }
-        return sizeMap[this.size] || sizeMap.normal
+        return sizeMap[this.size] || this.size || sizeMap.normal
       }
     },
     data () {

@@ -1,16 +1,13 @@
 <template>
   <div class="page likes-product-page">
-    <div
-      class="like-list"
+    <x-card-list
       v-infinite-scroll="loadMore"
       infinite-scroll-disabled="infiniteScrollDisabled"
       infinite-scroll-distance="10">
       <x-card
         v-for="item in list"
         :key="item.id"
-        class="like-item"
         :pic="item.cover"
-        pic-width="4.53rem"
         pic-height="4.2667rem">
         <span @click="gotoDetail(item)">{{ item.name }}</span>
         <x-money :value="item.market_price" slot="meta"></x-money>
@@ -18,7 +15,7 @@
           <x-icon type="delete_goods" @click.native="remove(item)" style="width: 25px;height: 25px;"></x-icon>
         </div>
       </x-card>
-    </div>
+    </x-card-list>
   </div>
 </template>
 <script>
@@ -60,18 +57,5 @@
   .page {
     font-size: 14px;
     padding-top: 0.38rem;
-  }
-  .like-list {
-    overflow: hidden;
-    padding: 0 0.27rem;
-    /*margin-bottom: -0.25rem;*/
-  }
-  .like-item {
-    float: left;
-    margin-right: 0.4rem;
-    margin-bottom: 0.25rem;
-  }
-  .like-item:nth-child(2n) {
-    margin-right: 0;
   }
 </style>

@@ -10,9 +10,9 @@
   font-family: Arial, 'Microsoft YaHei';
   box-sizing: border-box;
 }
-//*::after, *::before {
-//  box-sizing: border-box;
-//}
+*::after, *::before {
+  box-sizing: border-box;
+}
 //img {
 //  vertical-align: top;
 //  border: none;
