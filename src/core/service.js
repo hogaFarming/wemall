@@ -3,7 +3,6 @@ import cache from '../utils/cache'
 export function pushHistorySearch (words) {
   if (!words || typeof words !== 'string') return
   let historySearch = getHistorySearch()
-  console.log(historySearch.indexOf(words))
   if (historySearch.indexOf(words) === -1) {
     historySearch.push(words)
   } else {

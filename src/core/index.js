@@ -12,6 +12,8 @@ import cache from 'utils/cache'
 import utils from 'utils/common'
 import config from 'core/config'
 
+Vue.use(require('vue-wechat-title'))
+
 const app = window.app = { router }
 app.config = config
 
@@ -77,5 +79,12 @@ router.beforeEach((to, from, next) => {
     }, next)
   }
 })
+/**
+ * title
+ */
+// router.afterEach((to, from) => {
+//   const title = (to.matched[0] && to.matched[0].meta.title) || '微商城'
+//   document.title = title
+// })
 
 export default app
