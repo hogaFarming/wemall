@@ -7,7 +7,7 @@
         :key="item[valueKey]"
         :active="value === item[valueKey]"
         :disabled="item.disabled"
-        @click="onClick(item)">
+        @click.native="onClick(item)">
         {{ item[labelKey] }}
       </x-label>
     </div>
@@ -29,7 +29,7 @@
       onClick (item) {
         if (item.disabled) return
         const isSelected = item[this.valueKey] === this.value
-        this.$emit('change', isSelected ? undefined : item[this.valueKey])
+        this.$emit('input', isSelected ? undefined : item[this.valueKey])
       }
     }
   }
