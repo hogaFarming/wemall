@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import auth from './authorization'
+import utils from '../utils/common'
+import cache from '../utils/cache'
 
 Vue.use(Router)
 
@@ -78,7 +81,23 @@ export function gotoLoginPage (callback) {
   if (callback === true) {
     backUrl = window.app.root.$route.fullPath
   }
-  router.push({ path: '/login', query: { callback: backUrl } })
+  // router.push({ path: '/login', query: { callback: backUrl } })
+
+  cache.set('isLogin', 0)
+  cache.set('isAuth', 0)
+  if (utils.isWeChat()) {
+    auth.check({
+      type: 'wechatOauth',              // wechatOauth, login
+      redirectUrl: '/api/wechat/auth',  // 验证不通过跳转的地址
+      callbackUrl: backUrl        // 返回的地址
+    })
+  } else {
+    auth.check({
+      type: 'login',                    // wechatOauth, login
+      redirectUrl: '/login',            // 验证不通过跳转的地址
+      callbackUrl: backUrl       // 返回的地址
+    })
+  }
 }
 
 export default router

@@ -408,6 +408,22 @@ const utils = {
     if (val === 0) return 0
     if (!val) return undefined
     return +val
+  },
+
+  getMonthDays (month, year) {
+    const bigMonths = [1, 3, 5, 7, 8, 10, 12]
+    if (month === 2) {
+      const y = year || new Date().getFullYear()
+      return utils.isLeapYear(y) ? 29 : 28
+    } else if (bigMonths.indexOf(month) !== -1) {
+      return 31
+    } else {
+      return 30
+    }
+  },
+
+  isLeapYear (year) {
+    return (year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0)
   }
 }
 
