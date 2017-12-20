@@ -49,7 +49,7 @@ Vue.component(TabItem.name, TabItem)
 Vue.component(Field.name, Field)
 Vue.component(Switch.name, Switch)
 Vue.component(MessageBox.name, MessageBox)
-Vue.component(Picker.name, Picker);
+Vue.component(Picker.name, Picker)
 
 /**
  * 检查权限
@@ -79,12 +79,5 @@ router.beforeEach((to, from, next) => {
     }, next)
   }
 })
-/**
- * title
- */
-// router.afterEach((to, from) => {
-//   const title = (to.matched[0] && to.matched[0].meta.title) || '微商城'
-//   document.title = title
-// })
 
 export default app
