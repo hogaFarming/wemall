@@ -70,6 +70,7 @@
     1: '男',
     2: '女'
   }
+  // TODO 上传头像
   export default {
     data: function () {
       return {
