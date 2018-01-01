@@ -67,6 +67,7 @@
       wechatpay () {
         this.$http.withLoading({
           url: '/api/order/pays',
+          method: 'post',
           data: {
             type: 'wechatpay',
             device: 'wap',
@@ -86,9 +87,10 @@
               if (res.err_msg === 'get_brand_wcpay_request:ok') {
                 window.location.href = '/order/paystatus?order_id=' + this.orderId
               } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
-                window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+                // window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
               } else {
-                window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+                // window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+                this.modalVisible = true
               }
             })
           }
