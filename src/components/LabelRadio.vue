@@ -7,7 +7,7 @@
         :key="item[valueKey]"
         :active="value === item[valueKey]"
         :disabled="item.disabled"
-        @click.native="onClick(item)">
+        @click="onClick(item)">
         {{ item[labelKey] }}
       </x-label>
     </div>

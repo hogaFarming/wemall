@@ -26,7 +26,7 @@
             <x-label-radio
               :value="selectedProps[property.sku_property_id]"
               :options="property.sku_property_value"
-              @change="onSelectedPropChange(property.sku_property_id, $event)"
+              @input="onSelectedPropChange(property.sku_property_id, $event)"
               :keys="['sku_property_value_name', 'sku_property_value_id']">
             </x-label-radio>
           </div>
