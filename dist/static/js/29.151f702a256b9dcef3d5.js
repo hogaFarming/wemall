@@ -1,2 +1,0 @@
-webpackJsonp([29],{VIPm:function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={render:function(){var t=this.$createElement,e=this._self._c||t;return e("div",[e("comment-form",{staticClass:"mgb"}),this._v(" "),e("comment-form",{staticClass:"mgb"}),this._v(" "),e("x-fixed-bottom",[e("x-button",{attrs:{type:"primary"}},[this._v("发布")])],1)],1)},staticRenderFns:[]},r=s("/Xao")(null,n,!1,null,null,null);e.default=r.exports}});
-//# sourceMappingURL=29.151f702a256b9dcef3d5.js.map
