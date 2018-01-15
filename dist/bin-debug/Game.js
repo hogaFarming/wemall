@@ -23,28 +23,37 @@ var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
         var _this = _super.call(this) || this;
+        _this.coin_num = 0; // 余额
         _this.startIndex = 0; // 从哪个玩家开始发牌
         _this.currIndex = 0; // 当前发到第几张
         _this.spPlayerResults = []; // 翻牌结果
         return _this;
     }
-    Game.prototype.init = function (stateData) {
+    Game.prototype.init = function (stateData, gameConfig) {
         this.setGameStateData(stateData);
         this.gameId = stateData.id;
+        if (gameConfig) {
+            this.coin_num = gameConfig.coin_num;
+            app.mainBoard.setMoney(gameConfig.coin_num);
+        }
         if (stateData.status === 0) {
             if (stateData.no_betting_time * 1000 < +new Date) {
                 app.showWaitTip();
             }
             this.initCurrentPhase();
         }
-        else if (stateData.status === 1) {
-            this.startLottery();
-        }
-        else if (stateData.status === 2) {
-            // 显示牌面，并显示结算结果
-            this.initCardPackage();
-            this.initCurrentPhase();
-            this.startDispatchCardsImmediately();
+        else {
+            this.nextNewGame = stateData.next_game_info;
+            if (stateData.status === 1) {
+                var secondsForLottery = Math.ceil(this.nextNewGame.lottery_time - 20 - (+new Date / 1000));
+                this.startLottery(secondsForLottery);
+            }
+            else if (stateData.status === 2) {
+                // 显示牌面，并显示结算结果
+                this.initCardPackage();
+                this.initCurrentPhase();
+                this.startDispatchCardsImmediately();
+            }
         }
     };
     /**
@@ -56,7 +65,11 @@ var Game = (function (_super) {
         if (this.currentPhase.type === PhaseType.Betting) {
             this.setGameStateData(stateData);
             if (this.currentPhase.countDown <= 0) {
-                this.startLottery();
+                var lottery_time = this.nextNewGame ? this.nextNewGame.lottery_time : (stateData.lottery_time + 50);
+                var secondsForLottery = Math.ceil(lottery_time - 20 - (+new Date / 1000));
+                if (secondsForLottery < 0)
+                    secondsForLottery += 51;
+                this.startLottery(secondsForLottery);
             }
         }
         else if (this.currentPhase.type === PhaseType.Lottery) {
@@ -81,12 +94,13 @@ var Game = (function (_super) {
             countDown: secondsToLottery
         });
     };
-    Game.prototype.startLottery = function () {
+    Game.prototype.startLottery = function (countDown) {
         if (this.currentPhase.type === PhaseType.Lottery)
             return;
+        console.log("开奖，countdown" + countDown);
         this.setCurrentPhase({
             type: PhaseType.Lottery,
-            countDown: 25
+            countDown: countDown || 25
         });
         this.initCardPackage();
         this.dispatchDecisionCard();
@@ -96,7 +110,11 @@ var Game = (function (_super) {
     };
     Game.prototype.startDispatchCards = function () {
         console.log("开始发牌..");
-        this.removeChildAt(0);
+        try {
+            this.removeChild(this.decisionCard);
+        }
+        catch (e) { }
+        ;
         var timer = new egret.Timer(Game.DispatchInterval, 24);
         timer.addEventListener(egret.TimerEvent.TIMER, this.dispatchNextCard, this);
         timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.onDispatchCardsComplete, this);
@@ -135,36 +153,44 @@ var Game = (function (_super) {
                 countDown: secondsToLottery
             });
         }
-        else if (this.gameStateData.status === 1) {
+        else {
+            var secondsForLottery = Math.ceil(this.nextNewGame.lottery_time - 20 - (+new Date / 1000));
             this.setCurrentPhase({
                 type: PhaseType.Lottery,
-                countDown: 25
+                countDown: secondsForLottery
             });
-        }
-        else if (this.gameStateData.status === 2) {
-            this.setCurrentPhase({
-                type: PhaseType.Lottery,
-                countDown: 0
-            });
+            // if (this.gameStateData.status === 1) {
+            //     this.setCurrentPhase({
+            //         type: PhaseType.Lottery,
+            //         countDown: secondsForLottery
+            //     })
+            // } else if (this.gameStateData.status === 2) {
+            //     this.setCurrentPhase({
+            //         type: PhaseType.Lottery,
+            //         countDown: secondsForLottery
+            //     })
+            // }
         }
     };
     Game.prototype.setGameStateData = function (stateData) {
         if (stateData === null) {
             console.log("set game state " + stateData);
             this.gameStateData = null;
-            debugger;
         }
         else {
             console.log("set game state status:" + stateData.status);
             this.gameStateData = stateData;
+            if (stateData.banker_type !== undefined) {
+                app.mainBoard.setDealerType(stateData.banker_type === 0 ? "系统上庄" : "玩家上庄");
+            }
         }
     };
     Game.prototype.setCurrentPhase = function (phase) {
         this.currentPhase = phase;
         if (this.currentPhase.countDown < 0)
             this.currentPhase.countDown = 0;
-        if (phase.countDown) {
-            var timer = this.timer = new egret.Timer(1000, phase.countDown);
+        if (this.currentPhase.countDown) {
+            var timer = this.timer = new egret.Timer(1000, this.currentPhase.countDown);
             timer.addEventListener(egret.TimerEvent.TIMER, this.onCountDown, this);
             timer.start();
         }
@@ -178,12 +204,18 @@ var Game = (function (_super) {
         else {
             this.currentPhase.countDown = 0;
             if (this.currentPhase.type === PhaseType.Betting && this.gameStateData && this.gameStateData.status > 0) {
-                this.startLottery();
+                // let lottery_time = this.nextNewGame ? this.nextNewGame.lottery_time : (this.gameStateData.lottery_time + 50);
+                // if (!this.nextNewGame) {
+                //     console.log("no next new game")
+                // }
+                var secondsForLottery = Math.ceil(this.nextNewGame.lottery_time - 20 - (+new Date / 1000));
+                // if (secondsForLottery < 0) debugger;
+                this.startLottery(secondsForLottery);
             }
             else if (this.currentPhase.type === PhaseType.Lottery) {
-                if (this.nextNewGame) {
-                    this.createNewGame(this.nextNewGame.game_id, this.nextNewGame.no_betting_time, this.nextNewGame.lottery_time);
-                }
+                // if (this.nextNewGame) {
+                this.createNewGame(this.nextNewGame.game_id, this.nextNewGame.no_betting_time, this.nextNewGame.lottery_time);
+                // }
                 // platform.getGameResult(this.gameId);
             }
         }
@@ -497,3 +529,4 @@ var Game = (function (_super) {
     return Game;
 }(egret.Sprite));
 __reflect(Game.prototype, "Game");
+//# sourceMappingURL=Game.js.map

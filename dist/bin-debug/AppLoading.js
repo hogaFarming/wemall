@@ -52,3 +52,4 @@ var AppLoading = (function (_super) {
     return AppLoading;
 }(egret.Sprite));
 __reflect(AppLoading.prototype, "AppLoading");
+//# sourceMappingURL=AppLoading.js.map

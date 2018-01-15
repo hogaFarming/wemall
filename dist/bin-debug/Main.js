@@ -128,7 +128,7 @@ var Main = (function (_super) {
                         return [4 /*yield*/, platform.getGameState()];
                     case 5:
                         gameState = _a.sent();
-                        this.game.init(gameState);
+                        this.game.init(gameState, gameConfig);
                         // this.hideLoading();
                         platform.addEventListener(RemoteEvent.BET, this.onRemoteBet, this);
                         platform.addEventListener(RemoteEvent.GAME_CREATE, this.onRemoteGameCreated, this);
@@ -242,9 +242,7 @@ var Main = (function (_super) {
      * 申请上庄
      */
     Main.prototype.beDealer = function () {
-        // this.game.restart();
-        this.game.showGameResult();
-        // new Dialog("您的余额不足，无法上庄！");
+        new Dialog("您的余额不足，无法上庄！");
     };
     /**
      * 申请下庄
@@ -272,13 +270,13 @@ var Main = (function (_super) {
         this.mainBoard.showBetAnimation(data.amount, data.playerIdx);
     };
     Main.prototype.onRemoteGameCreated = function (e) {
-        if (this.game.currentPhase && this.game.currentPhase.type === PhaseType.Lottery && this.game.currentPhase.countDown > 0) {
-            this.game.nextNewGame = e.data;
-        }
-        else {
-            var data = e.data;
-            this.game.createNewGame(data.game_id, data.no_betting_time, data.lottery_time);
-        }
+        this.game.nextNewGame = e.data;
+        // if (this.game.currentPhase && this.game.currentPhase.type === PhaseType.Lottery && this.game.currentPhase.countDown > 0) {
+        //     this.game.nextNewGame = e.data;
+        // } else {
+        //     let data = e.data;
+        //     this.game.createNewGame(data.game_id, data.no_betting_time, data.lottery_time);
+        // }
     };
     Main.prototype.onRemoteGameReceivedResult = function (e) {
         var data = e.data;
@@ -318,3 +316,4 @@ var Main = (function (_super) {
     return Main;
 }(egret.DisplayObjectContainer));
 __reflect(Main.prototype, "Main");
+//# sourceMappingURL=Main.js.map

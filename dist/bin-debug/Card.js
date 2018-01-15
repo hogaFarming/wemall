@@ -220,3 +220,4 @@ var Card = (function (_super) {
     return Card;
 }(egret.Sprite));
 __reflect(Card.prototype, "Card");
+//# sourceMappingURL=Card.js.map

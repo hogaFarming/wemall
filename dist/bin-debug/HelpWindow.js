@@ -97,3 +97,4 @@ var HelpWindow = (function (_super) {
     return HelpWindow;
 }(egret.Sprite));
 __reflect(HelpWindow.prototype, "HelpWindow", ["ModalLifeCycle"]);
+//# sourceMappingURL=HelpWindow.js.map

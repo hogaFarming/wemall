@@ -72,7 +72,7 @@ var WeixinPlatform = (function (_super) {
                         res = _a.sent();
                         config = res.data.config;
                         this.connectSocket(config.ip, config.port);
-                        return [2 /*return*/, { nickName: "username" }];
+                        return [2 /*return*/, res.data];
                 }
             });
         });
@@ -302,3 +302,4 @@ __reflect(WeixinPlatform.prototype, "WeixinPlatform", ["Platform"]);
 if (!window.platform) {
     window.platform = new WeixinPlatform();
 }
+//# sourceMappingURL=Platform.js.map

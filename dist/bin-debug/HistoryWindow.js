@@ -102,3 +102,4 @@ var HistoryWindow = (function (_super) {
     return HistoryWindow;
 }(egret.Sprite));
 __reflect(HistoryWindow.prototype, "HistoryWindow", ["ModalLifeCycle"]);
+//# sourceMappingURL=HistoryWindow.js.map

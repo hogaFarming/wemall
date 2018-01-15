@@ -16,6 +16,8 @@ var MainBoard = (function (_super) {
     function MainBoard() {
         var _this = _super.call(this) || this;
         _this.betChips = []; // 已下筹码
+        _this.txtCurrBettings = []; // 显示四个位置下注金额
+        _this.currBettings = [0, 0, 0, 0]; // 当前下注
         _this.addSprites();
         return _this;
     }
@@ -189,6 +191,38 @@ var MainBoard = (function (_super) {
             chip.y = currY;
         };
         this.addEventListener(egret.Event.ENTER_FRAME, onEnterFrame, this);
+        this.currBettings[playerIdx - 1] = this.currBettings[playerIdx - 1] + value;
+        var txtBettingPos = [
+            { x: 135, y: 250 },
+            { x: 380, y: 285 },
+            { x: 673, y: 280 },
+            { x: 940, y: 246 }
+        ];
+        this.txtCurrBettings.forEach(function (item) {
+            try {
+                _this.removeChild(item);
+            }
+            catch (e) { }
+        });
+        this.txtCurrBettings = [];
+        txtBettingPos.forEach(function (pos, index) {
+            var betValue = _this.currBettings[index];
+            if (!betValue)
+                return;
+            var txt = new egret.TextField();
+            txt.text = "已下注： " + betValue;
+            txt.textColor = 0xc9b667;
+            txt.x = pos.x;
+            txt.y = pos.y;
+            txt.size = 20;
+            _this.txtCurrBettings.push(txt);
+            _this.addChild(txt);
+        });
+        var totalBettings = 0;
+        this.currBettings.forEach(function (num) {
+            totalBettings += num;
+        });
+        this.setMoney(app.game.coin_num - totalBettings);
     };
     MainBoard.prototype.selectChip = function (idx) {
         app.playEffectSound("ClickSound_wav");
@@ -217,6 +251,11 @@ var MainBoard = (function (_super) {
                 _this.removeChild(item);
             });
             this.betChips = [];
+            this.txtCurrBettings.forEach(function (item) {
+                _this.removeChild(item);
+            });
+            this.txtCurrBettings = [];
+            this.currBettings = [0, 0, 0, 0];
         }
         catch (e) {
         }
@@ -236,3 +275,4 @@ var MainBoard = (function (_super) {
     return MainBoard;
 }(egret.DisplayObjectContainer));
 __reflect(MainBoard.prototype, "MainBoard");
+//# sourceMappingURL=MainBoard.js.map
