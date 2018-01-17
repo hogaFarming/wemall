@@ -266,6 +266,7 @@ var Main = (function (_super) {
      * 申请下庄
      */
     Main.prototype.bePlayer = function () {
+        platform.applyPlayer();
     };
     /**
      * 下注

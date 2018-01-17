@@ -179,6 +179,7 @@ var Game = (function (_super) {
             this.gameStateData = stateData;
             app.mainBoard.setDealerType(stateData.banker_username || "");
             this.is_banker = stateData.is_banker;
+            app.mainBoard.setBeDealerBtn(this.is_banker === 1);
         }
     };
     Game.prototype.setCurrentPhase = function (phase) {

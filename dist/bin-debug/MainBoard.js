@@ -42,6 +42,16 @@ var MainBoard = (function (_super) {
     MainBoard.prototype.setDealerType = function (dealerType) {
         this.txtDealerType.text = dealerType;
     };
+    MainBoard.prototype.setBeDealerBtn = function (isDealder) {
+        if (isDealder) {
+            this.btnBeDealer.visible = false;
+            this.btnBePlayer.visible = true;
+        }
+        else {
+            this.btnBeDealer.visible = true;
+            this.btnBePlayer.visible = false;
+        }
+    };
     MainBoard.prototype.addSprites = function () {
         this.addBitmap("brnn_env.DealerInformation", 21, 28);
         this.addBitmap("brnn_env.timeBg", (1280 - 225) / 2, 7);

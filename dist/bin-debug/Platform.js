@@ -233,6 +233,19 @@ var WeixinPlatform = (function (_super) {
             });
         });
     };
+    WeixinPlatform.prototype.applyPlayer = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, http.get("/api/down_banker")];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     WeixinPlatform.prototype.connectSocket = function (address, port) {
         this.ws = new egret.WebSocket();
         this.ws.addEventListener(egret.ProgressEvent.SOCKET_DATA, this.onSocketData, this);
