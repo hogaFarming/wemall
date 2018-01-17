@@ -99,6 +99,7 @@ var Main = (function (_super) {
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             var gameConfig, gameState;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -124,6 +125,7 @@ var Main = (function (_super) {
                         platform.getUserMoney().then(function (result) {
                             app.mainBoard.setMoney(result.num);
                             app.mainBoard.setScore(result.user_total_betting_num);
+                            _this.game.coin_num = result.num;
                         });
                         platform.getDealerMoney(gameState.id).then(function (result) {
                             app.mainBoard.setDealerMoney(result.banker_total_coin_num || "--");

@@ -400,6 +400,7 @@ var Game = (function (_super) {
         return RES.getRes(msgMap[msg]);
     };
     Game.prototype.showGameResult = function () {
+        var _this = this;
         if (this.gameStateData.status !== 2)
             return;
         if (!this.spGameResult) {
@@ -445,6 +446,7 @@ var Game = (function (_super) {
             platform.getUserMoney().then(function (result) {
                 app.mainBoard.setMoney(result.num);
                 app.mainBoard.setScore(result.user_total_betting_num);
+                _this.coin_num = result.num;
             });
             platform.getDealerMoney(this.nextNewGame.game_id).then(function (result) {
                 app.mainBoard.setDealerMoney(result.banker_total_coin_num || "--");

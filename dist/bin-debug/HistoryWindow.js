@@ -24,7 +24,7 @@ var HistoryWindow = (function (_super) {
     __extends(HistoryWindow, _super);
     function HistoryWindow() {
         var _this = _super.call(this) || this;
-        _this.rightFlag = utils.getRes("brnn_cards.RightAndWrong1");
+        _this.rightFlag = utils.getRes("brnn_cards.RightAndWrong3");
         _this.wrongFlag = utils.getRes("brnn_cards.RightAndWrong2");
         _this.recordsData = [];
         _this.showingIdx = 0;
