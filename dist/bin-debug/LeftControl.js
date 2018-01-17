@@ -36,6 +36,7 @@ var LeftControl = (function (_super) {
         panel.addChild(bitmap);
         panel.x = 0;
         panel.y = 210;
+        panel.visible = false;
         this.addChild(panel);
         this.addPanelBtn(ButtonModels.BackButton, this.onClickBackBtn, 12, 18);
         this.soundBtn = this.addPanelBtn(ButtonModels.SoundButtonA, this.handleClickSoundBtn, 73, 118);
@@ -68,8 +69,13 @@ var LeftControl = (function (_super) {
         }
     };
     LeftControl.prototype.onClickBackBtn = function () {
-        console.log("click panel btn");
-        app.modalManager.openHelpModal();
+        // app.modalManager.openHelpModal();
+        if (history.length > 1) {
+            history.back();
+        }
+        else {
+            window.close();
+        }
     };
     LeftControl.prototype.handleClickSoundBtn = function () {
         app.toggleBgmEnabled();
@@ -90,4 +96,3 @@ var LeftControl = (function (_super) {
     return LeftControl;
 }(egret.Sprite));
 __reflect(LeftControl.prototype, "LeftControl");
-//# sourceMappingURL=LeftControl.js.map
