@@ -1,8 +1,8 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = this && this.__extends || function __extends(t, e) { 
- function r() { 
+var __extends = this && this.__extends || function __extends(t, e) {
+ function r() {
  this.constructor = t;
 }
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
@@ -329,6 +329,7 @@ var WeixinPlatform = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var loginStatus, isAuth, callbackUrl, apiToken, url;
             return __generator(this, function (_a) {
+              debugger;
                 switch (_a.label) {
                     case 0:
                         loginStatus = utils.cache.get("isLogin");
@@ -365,6 +366,8 @@ var WeixinPlatform = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var res, e_1;
             return __generator(this, function (_a) {
+
+                debugger;
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 9]);
