@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="format-detection" content="telephone=no">
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=640, initial-scale=1.0,maximum-scale=1.0"> -->
+    <meta name="viewport" content="width=500,target-densitydpi=device-dpi,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>推币机游戏</title>
+    <link rel="stylesheet" href="css/pengzhuang.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/loading_page.css">
+    <link rel="stylesheet" href="css/tipsLayer.css">
+    <script src="js/inobounce.min.js"></script>
+    <script src="js/polyfill.min.js"></script>
+    <script src="js/es6-promise.auto.js"></script>
+    <script src="js/drill.js"></script>
+    <script src="js/main.js"></script>
+</head>
+
+<body>
+    <!-- <audio src="source/bgm.mp3" autoplay loop></audio> -->
+    <audio src="source/yingbi.mp3" id="yingbi_audio"></audio>
+    <div class="container" style="opacity:0;">
+        <img src="img/paw_zui.png" alt="" style="opacity:0;width:1px;height:0;">
+        <div class="top_ele" style="top:10px;">
+            <img src="img/top_pic.png" style="width:64%;" alt="">
+        </div>
+        <div class="top_ele">
+            <img src="img/top_pic2.png" style="width:100%;" alt="">
+        </div>
+        <div class="main_progree" id="all_xf_progress">
+            <div class="main_progree_text">
+                10 / 50000
+            </div>
+            <div class="main_progree_in">
+                <div class="main_progree_mid" style="width:0px;"></div>
+            </div>
+        </div>
+        <div class="p_scenes_outer" style="z-index:2;">
+            <div class="top_info_pannel">
+                <div class="top_info_font1">
+                    <img src="img/top_info_font1.png" width="82" alt="">
+                </div>
+                <div class="top_info_btn">
+                    <img id="shuoming_btn" src="img/top_info_btn.png" width="120" alt="">
+                </div>
+                <div class="top_info_text" id="use_coin">
+                    0
+                </div>
+            </div>
+            <div class="move_paw_con_z2"></div>
+            <div class="move_paw_con"></div>
+            <div class="move_station">
+                <div class="move_paw">
+                    <div class="move_paw_bg"></div>
+                    <div class="move_paw_coin"></div>
+                </div>
+            </div>
+            <div class="o_btn_group">
+                <div class="o_btn" id="elong_btn" style="top:0;left:5px;">
+                    <img src="img/o_btn_shenchang.png" alt="">
+                    <div class="o_btn_pop">0</div>
+                </div>
+                <div class="o_btn" id="shake_btn" style="bottom:0;left:5px;">
+                    <img src="img/o_btn_doudong.png" alt="">
+                    <div class="o_btn_pop">0</div>
+                </div>
+                <div class="o_btn" id="beibao_btn" style="top:0;right:5px;">
+                    <img src="img/o_btn_beibao.png" alt="">
+                </div>
+                <div class="o_btn" id="duihuan_btn" style="bottom:0;right:5px;">
+                    <img src="img/o_btn_duihuan.png" alt="">
+                </div>
+            </div>
+            <div id="open_paw_btn" class="center_font_con"> </div>
+        </div>
+        <div class="p_scenes_outer">
+            <div class="move_station_outer"></div>
+            <div class="p_scenes">
+                <div class="topbox">
+                    <div class="topbox_before1"></div>
+                </div>
+            </div>
+            <div class="desk_bottom"><img src="img/desk_bottom.png" alt=""></div>
+            <div class="liwu_con">
+                <img class="liwu_left" src="img/bg_liwu_left.png" width="158" alt="">
+                <img class="liwu_right" src="img/bg_liwu_right.png" width="150" alt="">
+            </div>
+            <div class="center_font_con">
+                <img src="img/font_xingyunzhi.png" class="center_title" alt="">
+                <div class="center_progress">
+                    <div class="center_progress_inner" style="width:0%;"></div>
+                    <div class="center_progress_text">0 / 3000</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wx_alert_tips"></div>
+
+    <!-- 初始loading -->
+    <div class="loading_page" id="start_loading">
+        <div class="main_progree">
+            <div class="main_progree_text">
+                加载中
+            </div>
+            <div class="main_progree_in">
+                <div id="start_loading_progress" class="main_progree_mid" style="width:0px;"></div>
+                <!-- <div class="main_progree_mid" style="width:370px;"></div> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示层 -->
+    <div class="tipslayer" id="start_tips" style="display:none;">
+        <div class="layer_con">
+            <div class="layer_con_closebtn"></div>
+            <img src="img/layer_shuoming.png" alt="">
+        </div>
+    </div>
+
+    <!-- 兑换1 -->
+    <div class="tipslayer" id="duihuan1_page" style="display:none;">
+        <div class="layer_con">
+            <div class="layer_con_closebtn"></div>
+            <img src="img/layer_duihuan1.png" alt="">
+            <div class="duihuan1_con">
+                <div class="duihuan1_1">0</div>
+                <div class="duihuan1_2">0</div>
+            </div>
+            <div class="duihuan1_con2">
+                <div class="duihuan1_btn1"></div>
+                <div class="duihuan1_btn2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 兑换金币 -->
+    <div class="tipslayer" id="duihuan2_page" style="display:none;">
+        <div class="layer_con">
+            <div class="layer_con_closebtn"></div>
+            <img src="img/layer_duihuan2.png" alt="">
+            <div class="duihuan2_con">
+                <div class="duihuan2_text">0</div>
+                <div class="duihuan2_textinput">
+                    <input type="text" placeholder="你的积分最多兑换0金币">
+                </div>
+                <div class="duihuan2_btn"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 兑换积分 -->
+    <div class="tipslayer" id="duihuan3_page" style="display:none;">
+        <div class="layer_con">
+            <div class="layer_con_closebtn"></div>
+            <img src="img/layer_duihuan3.png" alt="">
+            <div class="duihuan2_con">
+                <div class="duihuan2_text">0</div>
+                <div class="duihuan2_textinput">
+                    <input type="text" placeholder="你的积分最多兑换0积分">
+                </div>
+                <div class="duihuan2_btn"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 背包按钮 -->
+    <div class="tipslayer" id="beibao_page" style="display:none;">
+        <div class="layer_con">
+            <div class="layer_con_closebtn"></div>
+            <div class="beibao_layer">
+                <div class="beibao_layer_inner">
+                    <div class="beibao_layer_line">
+                        <div class="beibao_layer_line_icon">
+                            <img src="img/big_coin1.png" height="62">
+                        </div>
+                        <div class="beibao_layer_line_text" id="b1_text">0</div>
+                        <div class="beibao_layer_line_btn">
+                            <img src="img/layer_beibao2_btn.png" height="45">
+                        </div>
+                    </div>
+                    <div class="beibao_layer_line">
+                        <div class="beibao_layer_line_icon">
+                            <img src="img/big_coin2.png" height="62">
+                        </div>
+                        <div class="beibao_layer_line_text" id="b2_text">0</div>
+                        <div class="beibao_layer_line_btn">
+                            <img src="img/layer_beibao2_btn.png" height="45">
+                        </div>
+                    </div>
+                    <div class="beibao_layer_line">
+                        <div class="beibao_layer_line_icon">
+                            <img src="img/big_coin3.png" height="62">
+                        </div>
+                        <div class="beibao_layer_line_text" id="b3_text">0</div>
+                        <div class="beibao_layer_line_btn">
+                            <img src="img/layer_beibao2_btn.png" height="45">
+                        </div>
+                    </div>
+                    <div class="beibao_layer_line">
+                        <div class="beibao_layer_line_icon">
+                            <img src="img/big_coin4.png" height="62">
+                        </div>
+                        <div class="beibao_layer_line_text" id="b4_text">0</div>
+                        <div class="beibao_layer_line_btn">
+                            <img src="img/layer_beibao2_btn.png" height="45">
+                        </div>
+                    </div>
+                    <div class="beibao_layer_line">
+                        <div class="beibao_layer_line_icon">
+                            <img src="img/big_coin5.png" height="62">
+                        </div>
+                        <div class="beibao_layer_line_text" id="b5_text">0</div>
+                        <div class="beibao_layer_line_btn">
+                            <img src="img/layer_beibao2_btn.png" height="45">
+                        </div>
+                    </div>
+                    <div class="beibao_layer_line">
+                        <div class="beibao_layer_line_icon">
+                            <img src="img/big_coin6.png" height="62">
+                        </div>
+                        <div class="beibao_layer_line_text" id="b6_text">0</div>
+                        <div class="beibao_layer_line_btn">
+                            <img src="img/layer_beibao2_btn.png" height="45">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img src="img/layer_beibao1.png" id="beibao_page_empty" style="display:none;" alt="">
+        </div>
+    </div>
+
+</body>
+
+</html>
