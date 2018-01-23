@@ -17,10 +17,12 @@ class Http {
     };
 
     public async getApiToken() {
+        http_api_token = utils.cache.get("http_api_token");
         if (http_api_token) return http_api_token;
         try {
             const result = await this._request("/api/init");
             http_api_token = result.token;
+            utils.cache.set("http_api_token", http_api_token);
             console.log("http_api_token: " + http_api_token);
             return http_api_token;
         } catch (e) {
