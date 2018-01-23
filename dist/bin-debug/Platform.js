@@ -344,6 +344,8 @@ var WeixinPlatform = (function (_super) {
                             "?callback=" + (encodeURIComponent(callbackUrl)) +
                             "&token=" + apiToken +
                             "&type=mp";
+                        console.log("redirect url: " + url);
+                        console.log("callback url == " + callbackUrl);
                         utils.cache.set("isLogin", "2");
                         window.location.href = url;
                         return [3 /*break*/, 3];
