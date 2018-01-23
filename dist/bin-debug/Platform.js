@@ -1,8 +1,8 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = this && this.__extends || function __extends(t, e) {
- function r() {
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
  this.constructor = t;
 }
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
@@ -329,10 +329,10 @@ var WeixinPlatform = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var loginStatus, isAuth, callbackUrl, apiToken, url;
             return __generator(this, function (_a) {
-              debugger;
                 switch (_a.label) {
                     case 0:
                         loginStatus = utils.cache.get("isLogin");
+                        debugger;
                         if (!(!loginStatus || loginStatus === "0")) return [3 /*break*/, 2];
                         isAuth = utils.cache.get("isAuth");
                         if (isAuth === "1")
@@ -366,12 +366,10 @@ var WeixinPlatform = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var res, e_1;
             return __generator(this, function (_a) {
-
-                debugger;
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 9]);
-                        return [4 /*yield*/, http.get("/api/judge/logins?usertest=74")];
+                        return [4 /*yield*/, http.get("/api/judge/logins")];
                     case 1:
                         res = _a.sent();
                         if (!(res.data.is_auth === 1 && res.data.is_user === 0)) return [3 /*break*/, 2];
