@@ -103,15 +103,15 @@ var Main = (function (_super) {
             var gameConfig, gameState;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.loadResource()];
+                    case 0: return [4 /*yield*/, platform.login()];
                     case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.loadResource()];
+                    case 2:
                         _a.sent();
                         this.createGameScene();
                         this.showLoading();
                         return [4 /*yield*/, this.loadSounds()];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, platform.login()];
                     case 3:
                         _a.sent();
                         return [4 /*yield*/, platform.getGameConfig()];
