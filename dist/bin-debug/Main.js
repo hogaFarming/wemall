@@ -107,10 +107,9 @@ var Main = (function (_super) {
                     case 1:
                         _a.sent();
                         this.createGameScene();
-                        // this.showLoading();
+                        this.showLoading();
                         return [4 /*yield*/, this.loadSounds()];
                     case 2:
-                        // this.showLoading();
                         _a.sent();
                         return [4 /*yield*/, platform.login()];
                     case 3:
@@ -121,6 +120,7 @@ var Main = (function (_super) {
                         return [4 /*yield*/, platform.getGameState()];
                     case 5:
                         gameState = _a.sent();
+                        this.hideLoading();
                         this.game.init(gameState, gameConfig);
                         platform.getUserMoney().then(function (result) {
                             app.mainBoard.setMoney(result.num);
