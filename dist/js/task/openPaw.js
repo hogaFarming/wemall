@@ -94,9 +94,7 @@ task(function () {
                                                     maindata.coin++;
                                                 }
                                                 _context2.next = 4;
-                                                return dataUtil.gameresult({
-                                                    data: JSON.stringify(ld)
-                                                });
+                                                return dataUtil.gameresult(ld);
 
                                             case 4:
                                                 gdata = _context2.sent;

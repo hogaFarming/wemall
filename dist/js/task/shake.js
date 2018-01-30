@@ -22,6 +22,10 @@ task(function () {
                                 return;
                             }
                             pz.shake();
+
+                            dataUtil.propuse({
+                                type: 2
+                            });
                         });
 
                         pz.on('shake', function () {

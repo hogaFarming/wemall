@@ -22,6 +22,10 @@ task(function () {
                                 return;
                             }
                             pz.elong();
+
+                            dataUtil.propuse({
+                                type: 1
+                            });
                         });
 
                         pz.on('elong', function () {

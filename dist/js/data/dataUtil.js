@@ -37,6 +37,7 @@ function randomWord(randomFlag, min, max) {
 
 var dataUtil = _defineProperty({
     // 根接口域名
+    // root: "http://120.79.21.200:81",
     root: "http://api.sc.shouyouhuyu.com",
     headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -67,11 +68,79 @@ var dataUtil = _defineProperty({
             };
             Object.assign(defaults, options);
             var oReq = new XMLHttpRequest();
-            oReq.onload = function () {
-                res(oReq.response);
-            };
+            // oReq.onload = () => {
+            //     res(oReq.response);
+            // };
+            oReq.onreadystatechange = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                if (!(oReq.readyState === 4)) {
+                                    _context.next = 25;
+                                    break;
+                                }
+
+                                if (!(oReq.status === 200)) {
+                                    _context.next = 5;
+                                    break;
+                                }
+
+                                res(oReq.response);
+                                _context.next = 25;
+                                break;
+
+                            case 5:
+                                if (!(oReq.status === 401 && oReq.response.error_code === 'AUTHORIZATION_INVALID')) {
+                                    _context.next = 16;
+                                    break;
+                                }
+
+                                localStorage.setItem('isLogin', '2');
+                                localStorage.setItem('isAuth', '0');
+                                localStorage.removeItem('api_token');
+                                console.log('token过期，重新获取token..');
+                                _context.next = 12;
+                                return dataUtil.initApiToken();
+
+                            case 12:
+                                console.log('重新发起请求..');
+                                dataUtil.getData(url, options).then(res, rej);
+                                _context.next = 25;
+                                break;
+
+                            case 16:
+                                if (!(oReq.status === 400 && oReq.response.error_code === 'NO LOGIN')) {
+                                    _context.next = 24;
+                                    break;
+                                }
+
+                                localStorage.setItem('isLogin', '0');
+                                localStorage.setItem('isAuth', '0');
+                                console.log('未登录，重新登录..');
+                                _context.next = 22;
+                                return dataUtil.login();
+
+                            case 22:
+                                _context.next = 25;
+                                break;
+
+                            case 24:
+                                rej(oReq.response);
+
+                            case 25:
+                            case "end":
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, undefined);
+            }));
             oReq.responseType = "json";
-            oReq.open(defaults.method, url + ("?usertest=" + (GetQueryString('usertest') || 69) + "&type=0"));
+            var _url = url + '?type=0';
+            if (GetQueryString('usertest')) {
+                _url += "?usertest=" + GetQueryString('usertest');
+            }
+            oReq.open(defaults.method, _url);
             for (var i in defaults.headers) {
                 oReq.setRequestHeader(i, defaults.headers[i]);
             }
@@ -81,32 +150,48 @@ var dataUtil = _defineProperty({
             oReq.send(defaults.data);
         });
     },
+    // 加密的方法
+    encry: function encry(data) {
+        data = JSON.stringify(data);
+        var key = CryptoJS.enc.Latin1.parse('c33367701511b4f6020ec61ded352059');
+        var iv = CryptoJS.enc.Latin1.parse('82c9d98af578245f');
+        var a = CryptoJS.AES.encrypt(data, key, {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.ZeroPadding
+        });
+        a = a.toString();
+        var b = CryptoJS.MD5(a).toString();
+        var c = a + b;
+        return c;
+    },
+
     // 保存当前盘的方法
     saveDesk: function saveDesk() {
         var _this = this;
 
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             var gdata;
-            return regeneratorRuntime.wrap(function _callee$(_context) {
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
-                    switch (_context.prev = _context.next) {
+                    switch (_context2.prev = _context2.next) {
                         case 0:
-                            _context.next = 2;
+                            _context2.next = 2;
                             return dataUtil.gamenowdetail({
-                                data: JSON.stringify(pz.getPosition())
+                                data: _this.encry(pz.getPosition())
                             });
 
                         case 2:
-                            gdata = _context.sent;
+                            gdata = _context2.sent;
 
                             console.log('上传结果 => ', gdata);
 
                         case 4:
                         case "end":
-                            return _context.stop();
+                            return _context2.stop();
                     }
                 }
-            }, _callee, _this);
+            }, _callee2, _this);
         }))();
     },
 
@@ -115,30 +200,54 @@ var dataUtil = _defineProperty({
     init: function init() {
         var _this2 = this;
 
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var api_token, data;
-            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
-                    switch (_context2.prev = _context2.next) {
+                    switch (_context3.prev = _context3.next) {
                         case 0:
+                            _context3.next = 2;
+                            return dataUtil.initApiToken();
+
+                        case 2:
+                            _context3.next = 4;
+                            return dataUtil.login();
+
+                        case 4:
+                        case "end":
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this2);
+        }))();
+    },
+    initApiToken: function initApiToken() {
+        var _this3 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            var api_token, data;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            // 检查本地是否有token
                             api_token = localStorage.getItem('api_token');
 
                             if (!api_token) {
-                                _context2.next = 6;
+                                _context4.next = 6;
                                 break;
                             }
 
                             dataUtil.headers['Authorization'] = api_token;
                             console.log('init api_token => ', api_token);
-                            _context2.next = 10;
+                            _context4.next = 10;
                             break;
 
                         case 6:
-                            _context2.next = 8;
+                            _context4.next = 8;
                             return dataUtil.getData(dataUtil.root + '/api/init');
 
                         case 8:
-                            data = _context2.sent;
+                            data = _context4.sent;
 
                             if (data.result) {
                                 // 开始添加 header 认证
@@ -150,42 +259,35 @@ var dataUtil = _defineProperty({
                             }
 
                         case 10:
-                            if (!/usertest/.test(location.href)) {
-                                _context2.next = 12;
-                                break;
-                            }
-
-                            return _context2.abrupt("return");
-
-                        case 12:
-                            _context2.next = 14;
-                            return _this2.login();
-
-                        case 14:
-                            return _context2.abrupt("return");
-
-                        case 15:
                         case "end":
-                            return _context2.stop();
+                            return _context4.stop();
                     }
                 }
-            }, _callee2, _this2);
+            }, _callee4, _this3);
         }))();
     },
     login: function login() {
-        var _this3 = this;
+        var _this4 = this;
 
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             var loginStatus, isAuth, callbackUrl, apiToken, url, res;
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
                 while (1) {
-                    switch (_context3.prev = _context3.next) {
+                    switch (_context5.prev = _context5.next) {
                         case 0:
+                            if (!/usertest/.test(location.href)) {
+                                _context5.next = 2;
+                                break;
+                            }
+
+                            return _context5.abrupt("return");
+
+                        case 2:
                             console.log('本地检查登录状态...');
                             loginStatus = localStorage.getItem('isLogin');
 
                             if (!(!loginStatus || loginStatus === "0")) {
-                                _context3.next = 17;
+                                _context5.next = 19;
                                 break;
                             }
 
@@ -193,13 +295,13 @@ var dataUtil = _defineProperty({
                             isAuth = localStorage.getItem("isAuth");
 
                             if (!(isAuth === "1")) {
-                                _context3.next = 7;
+                                _context5.next = 9;
                                 break;
                             }
 
-                            return _context3.abrupt("return");
+                            return _context5.abrupt("return");
 
-                        case 7:
+                        case 9:
                             callbackUrl = location.href;
                             apiToken = localStorage.getItem('api_token');
                             url = dataUtil.root + "/api/wechat/auth" + "?callback=" + encodeURIComponent(callbackUrl) + "&token=" + apiToken + "&type=mp";
@@ -209,25 +311,25 @@ var dataUtil = _defineProperty({
                             console.log("callback url == " + callbackUrl);
                             localStorage.setItem("isLogin", "2");
                             window.location.href = url;
-                            _context3.next = 42;
+                            _context5.next = 44;
                             break;
 
-                        case 17:
+                        case 19:
                             if (!(loginStatus === "2")) {
-                                _context3.next = 41;
+                                _context5.next = 43;
                                 break;
                             }
 
                             console.log('isLogin => 2');
                             console.log('服务端检查当前登录状态...');
-                            _context3.next = 22;
+                            _context5.next = 24;
                             return dataUtil.getData(dataUtil.root + '/api/judge/logins');
 
-                        case 22:
-                            res = _context3.sent;
+                        case 24:
+                            res = _context5.sent;
 
                             if (!(res.data.is_auth === 1 && res.data.is_user === 0)) {
-                                _context3.next = 29;
+                                _context5.next = 31;
                                 break;
                             }
 
@@ -235,119 +337,50 @@ var dataUtil = _defineProperty({
                             localStorage.setItem("isAuth", "1");
                             // TODO
                             console.log("已通过微信认证，但是未登录？");
-                            _context3.next = 39;
+                            _context5.next = 41;
                             break;
 
-                        case 29:
+                        case 31:
                             if (!(res.data.is_auth === 0)) {
-                                _context3.next = 38;
+                                _context5.next = 40;
                                 break;
                             }
 
                             localStorage.setItem("isAuth", "0");
                             localStorage.setItem("isLogin", "0");
                             console.log('当前未登录。');
-                            _context3.next = 35;
-                            return _this3.login();
+                            _context5.next = 37;
+                            return _this4.login();
 
-                        case 35:
-                            return _context3.abrupt("return", _context3.sent);
+                        case 37:
+                            return _context5.abrupt("return", _context5.sent);
 
-                        case 38:
+                        case 40:
                             if (res.data.is_auth === 1 && res.data.is_user === 1) {
                                 localStorage.setItem("isAuth", "1");
                                 localStorage.setItem("isLogin", "1");
                                 console.log('当前已登录');
                             }
 
-                        case 39:
-                            _context3.next = 42;
+                        case 41:
+                            _context5.next = 44;
                             break;
 
-                        case 41:
+                        case 43:
                             console.log('isLogin => 1');
 
-                        case 42:
+                        case 44:
                         case "end":
-                            return _context3.stop();
+                            return _context5.stop();
                     }
                 }
-            }, _callee3, _this3);
+            }, _callee5, _this4);
         }))();
     },
 
     // 获取公匙
     getras: function getras() {
-        var _this4 = this;
-
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var data;
-            return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                while (1) {
-                    switch (_context4.prev = _context4.next) {
-                        case 0:
-                            _context4.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/sign', {
-                                method: "GET"
-                            });
-
-                        case 2:
-                            data = _context4.sent;
-
-                            if (!data) {
-                                _context4.next = 5;
-                                break;
-                            }
-
-                            return _context4.abrupt("return", data);
-
-                        case 5:
-                        case "end":
-                            return _context4.stop();
-                    }
-                }
-            }, _callee4, _this4);
-        }))();
-    },
-
-    // 获取aes
-    postaes: function postaes(d) {
         var _this5 = this;
-
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-            var data;
-            return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                while (1) {
-                    switch (_context5.prev = _context5.next) {
-                        case 0:
-                            _context5.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/init_key', {
-                                method: "POST",
-                                data: d
-                            });
-
-                        case 2:
-                            data = _context5.sent;
-
-                            if (!data) {
-                                _context5.next = 5;
-                                break;
-                            }
-
-                            return _context5.abrupt("return", data);
-
-                        case 5:
-                        case "end":
-                            return _context5.stop();
-                    }
-                }
-            }, _callee5, _this5);
-        }))();
-    },
-
-    // 绑定用户
-    bindUser: function bindUser(d) {
-        var _this6 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             var data;
@@ -356,27 +389,32 @@ var dataUtil = _defineProperty({
                     switch (_context6.prev = _context6.next) {
                         case 0:
                             _context6.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/bind', {
-                                method: "POST",
-                                data: d
+                            return dataUtil.getData(dataUtil.root + '/api/sign', {
+                                method: "GET"
                             });
 
                         case 2:
                             data = _context6.sent;
+
+                            if (!data) {
+                                _context6.next = 5;
+                                break;
+                            }
+
                             return _context6.abrupt("return", data);
 
-                        case 4:
+                        case 5:
                         case "end":
                             return _context6.stop();
                     }
                 }
-            }, _callee6, _this6);
+            }, _callee6, _this5);
         }))();
     },
 
-    // 换硬币
-    excoin: function excoin(d) {
-        var _this7 = this;
+    // 获取aes
+    postaes: function postaes(d) {
+        var _this6 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
             var data;
@@ -385,7 +423,7 @@ var dataUtil = _defineProperty({
                     switch (_context7.prev = _context7.next) {
                         case 0:
                             _context7.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/exchangecoin', {
+                            return dataUtil.getData(dataUtil.root + '/api/init_key', {
                                 method: "POST",
                                 data: d
                             });
@@ -405,13 +443,13 @@ var dataUtil = _defineProperty({
                             return _context7.stop();
                     }
                 }
-            }, _callee7, _this7);
+            }, _callee7, _this6);
         }))();
     },
 
-    // 结果提交
-    gameresult: function gameresult(d) {
-        var _this8 = this;
+    // 绑定用户
+    bindUser: function bindUser(d) {
+        var _this7 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
             var data;
@@ -420,33 +458,27 @@ var dataUtil = _defineProperty({
                     switch (_context8.prev = _context8.next) {
                         case 0:
                             _context8.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/gameresult', {
+                            return dataUtil.getData(dataUtil.root + '/api/bind', {
                                 method: "POST",
                                 data: d
                             });
 
                         case 2:
                             data = _context8.sent;
-
-                            if (!data) {
-                                _context8.next = 5;
-                                break;
-                            }
-
                             return _context8.abrupt("return", data);
 
-                        case 5:
+                        case 4:
                         case "end":
                             return _context8.stop();
                     }
                 }
-            }, _callee8, _this8);
+            }, _callee8, _this7);
         }))();
     },
 
-    // 兑换积分或道具
-    prizeevent: function prizeevent(d) {
-        var _this9 = this;
+    // 换硬币
+    excoin: function excoin(d) {
+        var _this8 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9() {
             var data;
@@ -455,7 +487,7 @@ var dataUtil = _defineProperty({
                     switch (_context9.prev = _context9.next) {
                         case 0:
                             _context9.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/prizeevent', {
+                            return dataUtil.getData(dataUtil.root + '/api/exchangecoin', {
                                 method: "POST",
                                 data: d
                             });
@@ -475,13 +507,13 @@ var dataUtil = _defineProperty({
                             return _context9.stop();
                     }
                 }
-            }, _callee9, _this9);
+            }, _callee9, _this8);
         }))();
     },
 
-    // 用户游戏资产信息
-    gameinfo: function gameinfo() {
-        var _this10 = this;
+    // 结果提交
+    gameresult: function gameresult(d) {
+        var _this9 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
             var data;
@@ -490,8 +522,11 @@ var dataUtil = _defineProperty({
                     switch (_context10.prev = _context10.next) {
                         case 0:
                             _context10.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/gameinfo', {
-                                method: "GET"
+                            return dataUtil.getData(dataUtil.root + '/api/gameresult', {
+                                method: "POST",
+                                data: {
+                                    data: _this9.encry(d)
+                                }
                             });
 
                         case 2:
@@ -509,13 +544,13 @@ var dataUtil = _defineProperty({
                             return _context10.stop();
                     }
                 }
-            }, _callee10, _this10);
+            }, _callee10, _this9);
         }))();
     },
 
-    // 放下硬币
-    putdowncoin: function putdowncoin() {
-        var _this11 = this;
+    // 兑换积分或道具
+    prizeevent: function prizeevent(d) {
+        var _this10 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
             var data;
@@ -524,8 +559,9 @@ var dataUtil = _defineProperty({
                     switch (_context11.prev = _context11.next) {
                         case 0:
                             _context11.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/putdowncoin', {
-                                method: "GET"
+                            return dataUtil.getData(dataUtil.root + '/api/prizeevent', {
+                                method: "POST",
+                                data: d
                             });
 
                         case 2:
@@ -543,13 +579,13 @@ var dataUtil = _defineProperty({
                             return _context11.stop();
                     }
                 }
-            }, _callee11, _this11);
+            }, _callee11, _this10);
         }))();
     },
 
-    // 道具使用
-    propuse: function propuse(d) {
-        var _this12 = this;
+    // 用户游戏资产信息
+    gameinfo: function gameinfo() {
+        var _this11 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12() {
             var data;
@@ -558,9 +594,8 @@ var dataUtil = _defineProperty({
                     switch (_context12.prev = _context12.next) {
                         case 0:
                             _context12.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/propuse', {
-                                method: "POST",
-                                data: d
+                            return dataUtil.getData(dataUtil.root + '/api/gameinfo', {
+                                method: "GET"
                             });
 
                         case 2:
@@ -578,13 +613,13 @@ var dataUtil = _defineProperty({
                             return _context12.stop();
                     }
                 }
-            }, _callee12, _this12);
+            }, _callee12, _this11);
         }))();
     },
 
-    // 游戏当前状态收集
-    gamenowdetail: function gamenowdetail(d) {
-        var _this13 = this;
+    // 放下硬币
+    putdowncoin: function putdowncoin() {
+        var _this12 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee13() {
             var data;
@@ -593,9 +628,8 @@ var dataUtil = _defineProperty({
                     switch (_context13.prev = _context13.next) {
                         case 0:
                             _context13.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/gamenowdetail', {
-                                method: "POST",
-                                data: d
+                            return dataUtil.getData(dataUtil.root + '/api/putdowncoin', {
+                                method: "GET"
                             });
 
                         case 2:
@@ -613,13 +647,13 @@ var dataUtil = _defineProperty({
                             return _context13.stop();
                     }
                 }
-            }, _callee13, _this13);
+            }, _callee13, _this12);
         }))();
     },
 
-    // 获取基础配置
-    gameconfig: function gameconfig() {
-        var _this14 = this;
+    // 道具使用
+    propuse: function propuse(d) {
+        var _this13 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee14() {
             var data;
@@ -628,8 +662,9 @@ var dataUtil = _defineProperty({
                     switch (_context14.prev = _context14.next) {
                         case 0:
                             _context14.next = 2;
-                            return dataUtil.getData(dataUtil.root + '/api/gameconfig', {
-                                method: "GET"
+                            return dataUtil.getData(dataUtil.root + '/api/propuse', {
+                                method: "POST",
+                                data: d
                             });
 
                         case 2:
@@ -647,39 +682,108 @@ var dataUtil = _defineProperty({
                             return _context14.stop();
                     }
                 }
-            }, _callee14, _this14);
+            }, _callee14, _this13);
+        }))();
+    },
+
+    // 游戏当前状态收集
+    gamenowdetail: function gamenowdetail(d) {
+        var _this14 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee15() {
+            var data;
+            return regeneratorRuntime.wrap(function _callee15$(_context15) {
+                while (1) {
+                    switch (_context15.prev = _context15.next) {
+                        case 0:
+                            _context15.next = 2;
+                            return dataUtil.getData(dataUtil.root + '/api/gamenowdetail', {
+                                method: "POST",
+                                data: d
+                            });
+
+                        case 2:
+                            data = _context15.sent;
+
+                            if (!data) {
+                                _context15.next = 5;
+                                break;
+                            }
+
+                            return _context15.abrupt("return", data);
+
+                        case 5:
+                        case "end":
+                            return _context15.stop();
+                    }
+                }
+            }, _callee15, _this14);
+        }))();
+    },
+
+    // 获取基础配置
+    gameconfig: function gameconfig() {
+        var _this15 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee16() {
+            var data;
+            return regeneratorRuntime.wrap(function _callee16$(_context16) {
+                while (1) {
+                    switch (_context16.prev = _context16.next) {
+                        case 0:
+                            _context16.next = 2;
+                            return dataUtil.getData(dataUtil.root + '/api/gameconfig', {
+                                method: "GET"
+                            });
+
+                        case 2:
+                            data = _context16.sent;
+
+                            if (!data) {
+                                _context16.next = 5;
+                                break;
+                            }
+
+                            return _context16.abrupt("return", data);
+
+                        case 5:
+                        case "end":
+                            return _context16.stop();
+                    }
+                }
+            }, _callee16, _this15);
         }))();
     }
 }, "gamenowdetail", function gamenowdetail(d) {
-    var _this15 = this;
+    var _this16 = this;
 
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee15() {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee17() {
         var data;
-        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+        return regeneratorRuntime.wrap(function _callee17$(_context17) {
             while (1) {
-                switch (_context15.prev = _context15.next) {
+                switch (_context17.prev = _context17.next) {
                     case 0:
-                        _context15.next = 2;
+                        _context17.next = 2;
                         return dataUtil.getData(dataUtil.root + '/api/gamenowdetail', {
                             method: "POST",
                             data: d
                         });
 
                     case 2:
-                        data = _context15.sent;
+                        data = _context17.sent;
 
                         if (!data) {
-                            _context15.next = 5;
+                            _context17.next = 5;
                             break;
                         }
 
-                        return _context15.abrupt("return", data);
+                        return _context17.abrupt("return", data);
 
                     case 5:
                     case "end":
-                        return _context15.stop();
+                        return _context17.stop();
                 }
             }
-        }, _callee15, _this15);
+        }, _callee17, _this16);
     }))();
 });

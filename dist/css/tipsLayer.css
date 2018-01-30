@@ -35,6 +35,18 @@
   height: 50px;
   z-index: 2;
 }
+.shuoming_in {
+  position: absolute;
+  left: 7%;
+  top: 88px;
+  width: 89%;
+  height: 281px;
+  color: #1c6b65;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  line-height: 1.5em;
+  font-size: 18px;
+}
 @-webkit-keyframes tips_anime {
   0% {
     -webkit-transform: translate3d(0, 500px, 0);
