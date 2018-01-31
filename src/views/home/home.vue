@@ -12,7 +12,7 @@
       </x-slider>
     </div>
     <ul class="action-list">
-      <li v-for="action in actions" :key="action.url" class="action-item" @click.native="toActionUrl(action.url)">
+      <li v-for="action in actions" :key="action.url" class="action-item" @click="toActionUrl(action.url)">
         <x-icon :type="action.icon"></x-icon>
         <br>
         <span>{{ action.label }}</span>
@@ -33,7 +33,7 @@
         covers: [],
         actions: [
           { icon: 'coupon01', label: '充值得积分', url: '/my/balance-recharge' },
-          { icon: 'coupon01', label: '积分兑换', url: '/product/exchange' },
+          { icon: 'coupon01', label: '积分兑换', url: '/product/exchanges' },
           { icon: 'coupon01', label: '福利兑换', url: 'my/cards-exchange' },
           { icon: 'coupon01', label: '游戏', url: '/games' }
         ]
@@ -53,12 +53,10 @@
         this.$router.push('/product/search')
       },
       toActionUrl (path) {
-        if (!path) return
-        this.$router.push(path)
+        if (path) this.$router.push(path)
       },
       toLink (link) {
-        if (!link) return
-        location.href = link
+        if (link) location.href = link
       }
     }
   }
@@ -73,6 +71,8 @@
   .action-list {
     display: flex;
     padding: 0.48rem 0;
+    background-color: #fff;
+    margin-bottom: 10px;
   }
   .action-item {
     flex: 1;
