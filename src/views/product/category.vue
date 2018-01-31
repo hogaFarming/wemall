@@ -8,6 +8,7 @@
         <ul class="category-nav">
           <li
             class="category-nav-item"
+            :class="{ active: cat.id === currentCat }"
             v-for="cat in categories"
             @click="selectCategory(cat.id)"
             :key="cat.id">
@@ -16,8 +17,16 @@
         </ul>
       </div>
       <div class="category-content">
-        <div class="category-sub-wrap" v-for="subCat in subCategories" :key="subCat.id" v-show="subCat.children && subCat.children.length > 0">
-          <div class="category-sub-title">{{ subCat.name }}</div>
+        <div
+          class="category-sub-wrap"
+          v-for="subCat in subCategories"
+          :key="subCat.id"
+          v-show="subCat.children && subCat.children.length > 0">
+          <div class="category-sub-title">
+            <span class="category-sub-title-left"></span>
+            <span class="category-sub-title-text">{{ subCat.name }}</span>
+            <span class="category-sub-title-right"></span>
+          </div>
           <ul class="category-sub-list">
             <li class="category-sub-item" v-for="subItem in subCat.children" :key="subItem.id" @click="onClickSubItem(subItem)">
               <x-image class="category-sub-image" :src="subItem.logo" width="1.6rem" height="1.6rem"></x-image>
@@ -107,6 +116,11 @@
     line-height: 3;
     text-align: center;
   }
+  .category-nav-item.active {
+    background: #fff;
+    border-left: 0.1rem solid #FFCD30;
+    padding-left: 0.1rem;
+  }
   .category-nav-item > span {
 
   }
@@ -127,6 +141,19 @@
     text-align: center;
     margin-bottom: 0.5333rem;
     font-size: 12px;
+  }
+  .category-sub-title > span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .category-sub-title-text {
+    margin: 0 5px;
+  }
+  .category-sub-title > .category-sub-title-left,
+  .category-sub-title > .category-sub-title-right {
+    height: 1px;
+    width: 0.4rem;
+    background-color: #c3c3c3;
   }
   .category-sub-item {
     width: 2.616rem;
