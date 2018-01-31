@@ -116,7 +116,7 @@
         })
       },
       gotoPay (item) {
-        this.$router.push({ path: '/order/pay', query: { orderid: item.id } })
+        this.$router.push({ path: '/order/pay/pay', query: { orderid: item.id } })
       },
       cancelOrder (item) {
         this.$messagebox.confirm('确认取消？').then(action => {

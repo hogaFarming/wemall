@@ -127,7 +127,7 @@
         })
       },
       gotoPay () {
-        this.$router.push({ path: '/order/pay', query: { orderid: this.id } })
+        this.$router.push({ path: '/order/pay/pay', query: { orderid: this.id } })
       },
       // TODO 提醒发货
       remindDelivery () {

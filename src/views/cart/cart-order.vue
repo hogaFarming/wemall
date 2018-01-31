@@ -217,7 +217,7 @@
           } else {
             // 未付款 到收银台
             this.$router.replace({
-              path: '/order/pay',
+              path: '/order/pay/pay',
               query: { orderid: res.data.order_id }
             })
           }

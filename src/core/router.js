@@ -28,7 +28,7 @@ const router = new Router({
     // 购物车
     { path: '/cart', component: () => import('views/cart/cart'), meta: { requireAuth: true, title: '购物车' } },
     { path: '/cart/order', component: () => import('views/cart/cart-order'), meta: { requireAuth: true, title: '确认订单' } },
-    { path: '/order/pay', component: () => import('views/cart/pay'), meta: { requireAuth: true, title: '付款' } },
+    { path: '/order/pay/pay', component: () => import('views/cart/pay'), meta: { requireAuth: true, title: '付款' } },
 
     // 我的
     { path: '/my/home', component: () => import('views/my/home'), meta: { requireAuth: true, title: '我的' } },
