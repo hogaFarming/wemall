@@ -38,10 +38,16 @@ const router = new Router({
     { path: '/my/likes/articles', component: () => import('views/my/likes-article'), meta: { requireAuth: true, title: '喜欢的文章' } },
     { path: '/my/likes/product', component: () => import('views/my/likes-product'), meta: { requireAuth: true, title: '喜欢的商品' } },
     { path: '/my/message', component: () => import('views/my/message'), meta: { requireAuth: true, title: '消息列表' } },
-    { path: '/my/score', component: () => import('views/my/my-score'), meta: { requireAuth: true, title: '我的积分' } },
-    { path: '/my/tickets', component: () => import('views/my/my-tickets'), meta: { requireAuth: true, title: '我的优惠券' } },
     { path: '/my/views', component: () => import('views/my/my-views'), meta: { requireAuth: true, title: '我的足迹' } },
     { path: '/my/profile', component: () => import('views/my/profile'), meta: { requireAuth: true, title: '个人资料' } },
+    { path: '/my/assets', component: () => import('views/my/my-assets'), meta: { requireAuth: true, title: '我的财产' } },
+    { path: '/my/score', component: () => import('views/my/my-score'), meta: { requireAuth: true, title: '我的积分' } },
+    { path: '/my/score-sign', component: () => import('views/my/my-score-sign'), meta: { requireAuth: true, title: '我的积分' } }, // 积分签到
+    { path: '/my/balance', component: () => import('views/my/my-balance'), meta: { requireAuth: true, title: '我的余额' } },
+    { path: '/my/balance-recharge', component: () => import('views/my/my-balance-recharge'), meta: { requireAuth: true, title: '我的余额' } }, // 余额充值
+    { path: '/my/cards', component: () => import('views/my/my-cards'), meta: { requireAuth: true, title: '我的福利卡' } },
+    { path: '/my/cards-exchange', component: () => import('views/my/my-cards-exchange'), meta: { requireAuth: true, title: '我的福利卡' } }, // 福利卡兑换
+    { path: '/my/tickets', component: () => import('views/my/my-tickets'), meta: { requireAuth: true, title: '我的优惠券' } },
 
     // 通知
     { path: '/notice/:id', component: () => import('views/my/notice'), meta: { title: '公告详情' } },
@@ -64,6 +70,7 @@ const router = new Router({
     { path: '/product/:id/comments', component: () => import('views/product/comments'), meta: { title: '全部评价' } },
     { path: '/product/list', component: () => import('views/product/list'), meta: { title: '商品列表' } },
     { path: '/product/search', component: () => import('views/product/search'), meta: { title: '商品搜索' } },
+    { path: '/product/exchanges', component: () => import('views/product/exchanges'), meta: { title: '积分兑换' } },
     { path: '/product/:id', component: () => import('views/product/detail'), meta: { title: '商品详情' } },
 
     { path: '/tickets', component: () => import('views/ticket/ticket'), meta: { title: '领券中心' } },
