@@ -30,6 +30,7 @@ import Card from './Card.vue'
 import CardList from './CardList.vue'
 import Search from './Search.vue'
 import Page from './Page.vue'
+import Image from './Image.vue'
 
 Vue.component(Avatar.name, Avatar)
 Vue.component(Button.name, Button)
@@ -62,3 +63,4 @@ Vue.component(Card.name, Card)
 Vue.component(CardList.name, CardList)
 Vue.component(Search.name, Search)
 Vue.component(Page.name, Page)
+Vue.component(Image.name, Image)
