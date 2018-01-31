@@ -13,9 +13,10 @@
     </div>
     <ul class="action-list">
       <li v-for="action in actions" :key="action.url" class="action-item" @click="toActionUrl(action.url)">
-        <x-icon :type="action.icon"></x-icon>
-        <br>
-        <span>{{ action.label }}</span>
+        <div class="image" style="width: 2.5rem;height: 1rem;">
+          <img :src="action.icon" alt="">
+        </div>
+        <div>{{ action.label }}</div>
       </li>
     </ul>
     <ul class="cover-list">
@@ -32,10 +33,10 @@
         banners: [],
         covers: [],
         actions: [
-          { icon: 'coupon01', label: '充值得积分', url: '/my/balance-recharge' },
-          { icon: 'coupon01', label: '积分兑换', url: '/product/exchanges' },
-          { icon: 'coupon01', label: '福利兑换', url: 'my/cards-exchange' },
-          { icon: 'coupon01', label: '游戏', url: '/games' }
+          { icon: '/static/icon/ic_home_points.png', label: '充值得积分', url: '/my/balance-recharge' },
+          { icon: '/static/icon/ic_home_exchange.png', label: '积分兑换', url: '/product/exchanges' },
+          { icon: '/static/icon/ic_home_benefits.png', label: '福利兑换', url: 'my/cards-exchange' },
+          { icon: '/static/icon/ic_home_game.png', label: '游戏', url: '/games' }
         ]
       }
     },
@@ -77,10 +78,6 @@
   .action-item {
     flex: 1;
     text-align: center;
-  }
-  .action-item > .x-icon {
-    height: auto;
-    margin-bottom: 0.32rem;
   }
   .cover-list li {
 
