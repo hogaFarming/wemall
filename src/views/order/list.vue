@@ -46,8 +46,10 @@
 <script>
   export default {
     data: function () {
+      let orderStatus = this.$route.query.type
+      if (orderStatus) orderStatus = +orderStatus
       return {
-        orderStatus: -1,
+        orderStatus: orderStatus || -1,
         nextPage: '',
         queries: {},
         total: 0,
