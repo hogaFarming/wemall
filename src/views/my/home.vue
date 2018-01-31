@@ -36,6 +36,30 @@
     <x-cell icon-right="next_page" @click.native="toUrl('/my/address')">收货地址管理</x-cell>
     <x-cell icon-right="next_page" @click.native="toUrl('/my/score-sign')">7天打卡</x-cell>
     <!--<x-cell icon-right="next_page" @click.native="toUrl('/')">联系客服</x-cell>-->
+    <x-fixed-bottom>
+      <div class="bottom-nav">
+        <div class="bottom-nav-item" @click="$router.push('/')">
+          <x-icon type="cart"></x-icon>
+          <br>
+          首页
+        </div>
+        <div class="bottom-nav-item" @click="$router.push('/product/category')">
+          <x-icon type="cart"></x-icon>
+          <br>
+          分类
+        </div>
+        <div class="bottom-nav-item" @click="$router.push('/cart')">
+          <x-icon type="cart"></x-icon>
+          <br>
+          购物车
+        </div>
+        <div class="bottom-nav-item" @click="$router.push('/my/home')">
+          <x-icon type="cart"></x-icon>
+          <br>
+          我的
+        </div>
+      </div>
+    </x-fixed-bottom>
   </div>
 </template>
 <script>
