@@ -38,18 +38,24 @@ request.interceptors.response.use(response => {
         return axios(error.config)
       })
     } else if (errorCode === 'NO LOGIN') {
-      return window.app.messagebox({
-        title: '当前登录失效',
-        message: '是否跳转到登录页？',
-        showCancelButton: true
-      }).then(result => {
-        if (result !== 'cancel') {
-          gotoLoginPage(true)
-          const err = new Error('请重新登录')
-          err.response = error.response
-          throw err
-        }
-        const err = new Error(errorMsg)
+      // return window.app.messagebox({
+      //   title: '当前登录失效',
+      //   message: '是否跳转到登录页？',
+      //   showCancelButton: true
+      // }).then(result => {
+      //   if (result !== 'cancel') {
+      //     gotoLoginPage(true)
+      //     const err = new Error('请重新登录')
+      //     err.response = error.response
+      //     throw err
+      //   }
+      //   const err = new Error(errorMsg)
+      //   err.response = error.response
+      //   throw err
+      // })
+      return Promise.resolve().then(result => {
+        gotoLoginPage(true)
+        const err = new Error('请重新登录')
         err.response = error.response
         throw err
       })

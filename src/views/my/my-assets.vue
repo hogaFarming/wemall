@@ -2,18 +2,18 @@
   <!--我的财产-->
   <div class="page myassets-page">
     <x-cell icon-right="next_page" @click.native="toMyBalance" bordered>
-      <p>账户余额</p>
-      <p>预存账户余额、充值及提现明细</p>
+      <p class="myassets-title"><x-icon type="me_balance"></x-icon>账户余额</p>
+      <p class="myassets-desc">预存账户余额、充值及提现明细</p>
       <span slot="right">{{ balance }}</span>
     </x-cell>
-    <x-cell icon-right="next_page" @click.native="toMyScore" bordered>
-      <p>会员积分</p>
-      <p>会员积分获取及消费日志</p>
-      <span slot="right">{{ score }}</span>
+    <x-cell @click.native="toMyScore" bordered>
+      <p class="myassets-title"><x-icon type="home_points"></x-icon>会员积分</p>
+      <p class="myassets-desc">会员积分获取及消费日志</p>
+      <div slot="right">{{ score }} <x-icon type="next_page"></x-icon></div>
     </x-cell>
     <x-cell icon-right="next_page" @click.native="toMyCards" bordered>
-      <p>福利卡</p>
-      <p>游戏获得的福利卡明细</p>
+      <p class="myassets-title"><x-icon type="home_benefits"></x-icon>福利卡</p>
+      <p class="myassets-desc">游戏获得的福利卡明细</p>
       <span slot="right">{{ cards }}</span>
     </x-cell>
   </div>
@@ -23,18 +23,20 @@
     data () {
       return {
         balance: '--元',
-        score: '--分',
+        score: '--积分',
         cards: '--张'
       }
     },
     mounted () {
-      this.fetchUserBalance()
+      this.fetchUserProfile()
     },
     methods: {
-      fetchUserBalance () {
-        this.$http.withLoading('/api/user/balance')
-          .then(result => {
-
+      fetchUserProfile () {
+        this.$http.withLoading('/api/users')
+          .then(res => {
+            this.balance = res.data.balance + '元'
+            this.score = res.data.integral + '积分'
+            this.cards = (res.data.cards || 0) + '张'
           })
       },
       toMyBalance () {
@@ -49,3 +51,18 @@
     }
   }
 </script>
+<style>
+  .myassets-page {
+
+  }
+  .myassets-title .x-icon {
+    height: 25px;
+    vertical-align: bottom;
+    margin-right: 0.5em;
+  }
+  .myassets-desc {
+    color: #9b9b9b;
+    font-size: 12px;
+    margin-top: 0.2133rem;
+  }
+</style>

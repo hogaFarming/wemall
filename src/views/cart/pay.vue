@@ -84,9 +84,9 @@
               signType: data.signType,     // 微信签名方式：
               paySign: data.paySign        // 微信签名
             }, res => {
-              alert(JSON.stringify(res))
+              // alert(JSON.stringify(res))
               if (res.err_msg === 'get_brand_wcpay_request:ok') {
-                window.location.href = '/order/paystatus?order_id=' + this.orderId
+                window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=1'
               } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
                 // window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
               } else {

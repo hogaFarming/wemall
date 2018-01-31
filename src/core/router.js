@@ -74,6 +74,7 @@ const router = new Router({
     { path: '/product/:id', component: () => import('views/product/detail'), meta: { title: '商品详情' } },
 
     { path: '/tickets', component: () => import('views/ticket/ticket'), meta: { title: '领券中心' } },
+    { path: '/games', component: () => import('views/games'), meta: { title: '游戏' } },
 
     { path: '*', component: () => import('views/404'), meta: { title: '找不到页面' } }
   ]

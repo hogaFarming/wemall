@@ -57,7 +57,7 @@
   }
   .score-banner {
     padding: 0.64rem 0.8rem;
-    background: #FFC935;
+    background-color: #FFC935!important;
     color: #ffffff;
   }
 </style>

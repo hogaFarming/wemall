@@ -53,7 +53,7 @@
           { icon: '/static/icon/me_refund_icon.png', label: '退款/售后', url: '/refund/list' }
         ],
         assetsActions: [
-          { icon: '/static/icon/me_balance_icon.png', label: '余额', url: '/my/balance' },
+          { icon: '/static/icon/ic_me_balance.png', label: '余额', url: '/my/balance' },
           { icon: '/static/icon/ic_home_points.png', label: '积分', url: '/my/score' },
           { icon: '/static/icon/ic_home_benefits.png', label: '福利卡', url: '/my/cards' }
         ]

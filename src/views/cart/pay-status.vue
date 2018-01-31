@@ -20,7 +20,7 @@
     data () {
       return {
         order_id: parseInt(this.$route.query.order_id),
-        status: parseInt(this.$route.query.status) === 0 ? 0 : 1 | 1
+        status: this.$route.query.status === '1'
       }
     },
     mounted () {

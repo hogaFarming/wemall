@@ -33,7 +33,9 @@
         <slot name="bottom-right"></slot>
       </div>
     </div>
-    <slot name="right" class="x-media-right"></slot>
+    <div class="x-media-right">
+      <slot name="right"></slot>
+    </div>
   </div>
 </template>
 <script>
