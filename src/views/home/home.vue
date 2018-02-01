@@ -57,7 +57,7 @@
         banners: [],
         covers: [],
         actions: [
-          { icon: '/static/icon/ic_home_points.png', label: '充值得积分', url: '/my/balance-recharge' },
+          { icon: '/static/icon/ic_home_points.png', label: '充值得积分', url: '/order/pay/balance-recharge' },
           { icon: '/static/icon/ic_home_exchange.png', label: '积分兑换', url: '/product/exchanges' },
           { icon: '/static/icon/ic_home_benefits.png', label: '福利兑换', url: 'my/cards-exchange' },
           { icon: '/static/icon/ic_home_game.png', label: '游戏', url: '/games' }

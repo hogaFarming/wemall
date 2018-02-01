@@ -3,7 +3,7 @@
     <div class="banner">
       <p style="margin-bottom: 0.1rem;">您的可用积分</p>
       <p><span style="font-size: 30px;">5999</span>积分</p>
-      <x-button @click.native="$router.push('/my/balance-recharge')" type="primary" ghost pill inline>去充值</x-button>
+      <x-button @click.native="$router.push('/order/pay/balance-recharge')" type="primary" ghost pill inline>去充值</x-button>
     </div>
     <div class="sign-records">
       <div class="sign-records-line"></div>

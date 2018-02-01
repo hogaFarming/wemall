@@ -50,7 +50,7 @@
         })
       },
       toRecharge () {
-        this.$router.push('/my/balance-recharge')
+        this.$router.push('/order/pay/balance-recharge')
       }
     }
   }

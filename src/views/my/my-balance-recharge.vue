@@ -3,7 +3,7 @@
     <p style="margin-bottom: 0.48rem;">优惠充值：</p>
     <ul class="recharge-cards-list">
       <li class="recharge-cards-item" v-for="item in rechargeCards">
-        <div class="recharge-cards-card" @click="recharge(item)">
+        <div class="recharge-cards-card" @click="recharge(item.amount)">
           <span style="color: #f8be21;font-size: 24px;">{{ item.amount / 100 }}</span><span style="color: #f8be21;">元</span>
           <br>
           <span style="color: #c3c3c3;font-size: 12px;">送：{{ item.score }}积分</span>
@@ -23,8 +23,8 @@
       :style="{ top: cardOtherBottom + 'px' }">
       <div class="popup-indicator" :style="{ left: indicatorLeft }"></div>
       <div class="recharge-control">
-        <input v-model="inputAmount" type="number" class="recharge-input" placeholder="请输入10-1000的整数倍">
-        <div class="recharge-btn">立即充值</div>
+        <input v-model.trim="inputAmount" type="number" class="recharge-input" placeholder="请输入10-1000的整数倍">
+        <div class="recharge-btn" @click="popupRecharge">立即充值</div>
       </div>
       <div style="font-size: 12px;margin-left: 0.5em;margin-top: 0.2rem;">送：{{ scoreOther }}积分</div>
     </mt-popup>
@@ -35,7 +35,7 @@
     data () {
       return {
         rechargeCards: [
-          { amount: 1000, score: 100 },
+          { amount: 10, score: 100 },
           { amount: 1000, score: 100 },
           { amount: 1000, score: 100 },
           { amount: 1000, score: 100 },
@@ -64,14 +64,65 @@
       }
     },
     mounted () {
-      this.cardOtherBottom = this.$refs.cardOther.getBoundingClientRect().bottom;
+      this.cardOtherBottom = this.$refs.cardOther.getBoundingClientRect().bottom
     },
     methods: {
-      recharge (item) {
+      recharge (amount) {
+        this.$messagebox.confirm('确定充值' + (amount / 100) + '元？').then(result => {
+          if (result === 'cancel') return
 
+          this.$http.withLoading({
+            url: '/api/user/recharges',
+            method: 'post',
+            data: {
+              type: 'wechatpay',
+              device: 'wap',
+              amount: amount
+            }
+          }).then(result => {
+            if (result) {
+              const data = result.data.url
+              window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                appId: data.appId,           // 公众号名称，由商户传入
+                timeStamp: data.timeStamp,   // 时间戳，自1970年以来的秒数
+                nonceStr: data.nonceStr,     // 随机串
+                package: data.package,
+                signType: data.signType,     // 微信签名方式：
+                paySign: data.paySign        // 微信签名
+              }, res => {
+                if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                  this.$toast('充值成功')
+                  this.popupVisible = false
+                  // window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=1'
+                } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                  this.$toast('充值取消')
+                  // window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+                } else {
+                  this.$toast('充值失败')
+                  // window.location.href = '/order/paystatus?order_id=' + this.orderId + '&status=0'
+                  // this.modalVisible = true
+                }
+              })
+            }
+          })
+        })
       },
       togglePopup () {
         this.popupVisible = !this.popupVisible
+      },
+      popupRecharge () {
+        let str = this.inputAmount
+        if (!str) return
+        let num = +str
+        if (isNaN(num)) {
+          this.$toast('请输入数字')
+        } else if (/\./.test(str)) {
+          this.$toast('请输入整数金额')
+        } else if (num < 10 || num > 1000) {
+          this.$toast('只允许充值10~1000元')
+        } else {
+          this.recharge(num * 100)
+        }
       }
     }
   }
