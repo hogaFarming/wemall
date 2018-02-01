@@ -32,9 +32,9 @@
       </li>
     </ul>
     <!--<x-cell icon-right="next_page" @click.native="toUrl('/')">兑换记录</x-cell>-->
-    <x-cell icon-right="next_page" @click.native="toUrl('/')">邀请返利</x-cell>
-    <x-cell icon-right="next_page" @click.native="toUrl('/my/address')">收货地址管理</x-cell>
-    <x-cell icon-right="next_page" @click.native="toUrl('/my/score-sign')">7天打卡</x-cell>
+    <x-cell icon-right="next_page" @click.native="toUrl('/')" bordered>邀请返利</x-cell>
+    <x-cell icon-right="next_page" @click.native="toUrl('/my/address')" bordered>收货地址管理</x-cell>
+    <x-cell icon-right="next_page" @click.native="toUrl('/my/score-sign')" bordered>7天打卡</x-cell>
     <!--<x-cell icon-right="next_page" @click.native="toUrl('/')">联系客服</x-cell>-->
     <x-fixed-bottom>
       <div class="bottom-nav">

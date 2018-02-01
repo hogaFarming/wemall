@@ -20,7 +20,8 @@
       <x-media-object v-for="item in goodsList" :key="item.id" :pic="item.goods_cover" class="bdb" padding>
         {{ item.goods_title }}
         <span slot="secondary">{{ item.sku_show_name }}</span>
-        <x-money slot="bottom-left" color="red" :value="item.sale_price"></x-money>
+        <x-money slot="bottom-left" v-if="goodsType === 0 || goodsType === 2" color="red" :value="item.sale_price"></x-money>
+        <span slot="bottom-left" v-if="goodsType === 1" style="color: red;">{{ item.fufen_price }}积分</span>
         <span slot="bottom-right">x{{ item.num }}</span>
       </x-media-object>
     </div>
@@ -28,19 +29,19 @@
     <x-field class="mgb" label="买家留言" v-model="desc" placeholder="您可以给商家留言"></x-field>
 
     <!--快递-->
-    <x-cell title="运费 (快递)">
+    <x-cell v-if="goodsType === 0" title="运费 (快递)">
       <x-money slot="right" :value="orderData.express_price" size="small" style="font-size: 16px"></x-money>
     </x-cell>
 
     <!--优惠券-->
-    <x-cell class="bdb" title="优惠券" icon-right="next_page" @click.native="showTickets">
+    <x-cell v-if="goodsType === 0" class="bdb" title="优惠券" icon-right="next_page" @click.native="showTickets">
       <span v-if="loading"></span>
       <span slot="right" v-else-if="coupon.length">有可用优惠券</span>
       <span slot="right" v-else>无可用优惠券</span>
     </x-cell>
 
     <!--积分-->
-    <x-cell class="mgb">
+    <x-cell v-if="goodsType === 0" class="mgb">
       <p class="black-3" style="margin-bottom: 5px;">当前积分：{{ capital.integral }}</p>
       <p>可用{{ capital.integral }}积分抵扣
         <x-money :value="capital.integral_price"></x-money>
@@ -56,10 +57,11 @@
         共 {{ goodsTotalNum }} 件商品
         <div slot="right">
           实付:
-          <x-money :value="orderData.actual_price" color="red"></x-money>
+          <x-money v-if="goodsType === 0 || goodsType === 2" :value="orderData.actual_price" color="red"></x-money>
+          <span v-if="goodsType === 1" style="color: red;">{{ totalFufenPrice }}积分</span>
         </div>
       </x-cell>
-      <x-button @click.native="submitOrder" type="primary" :disabled="!isFormReady">提交订单</x-button>
+      <x-button @click.native="submitOrder" type="primary" :disabled="!isFormReady">{{ submitText }}</x-button>
     </x-fixed-bottom>
 
     <mt-popup class="cart-popup" v-model="ticketsVisible" position="bottom">
@@ -90,6 +92,7 @@
     data: function () {
       return {
         loading: true,
+        goodsType: +(this.$route.query.goods_type || 0),
         query: {
           cart: this.$route.query.cart || undefined,
           goods_id: this.routeQueryId('goods_id'),
@@ -128,6 +131,16 @@
       isFormReady () {
         if (!this.address) return false
         return true
+      },
+      totalFufenPrice () {
+        if (this.goodsType === 1) {
+          return this.orderData.fufen_price * this.orderData.goods_num
+        }
+      },
+      submitText () {
+        if (this.goodsType === 0) return '提交订单'
+        if (this.goodsType === 1) return '兑换商品'
+        if (this.goodsType === 2) return '余额购买'
       }
     },
     mounted () {
@@ -203,25 +216,56 @@
         if (this.useIntegral) {
           data.integral = this.capital.can_use_integral
         }
-        this.$http.withLoading({
-          url: '/api/orders',
-          data: data,
-          method: 'post'
-        }).then(res => {
-          if (res.data.pay_done) {
-            // 已付款 到付款状态页
-            this.$router.replace({
-              path: '/order/paystatus',
-              query: { orderid: res.data.order_id }
+
+        if (this.goodsType === 0) {
+          this.$http.withLoading({
+            url: '/api/orders',
+            data: data,
+            method: 'post'
+          }).then(res => {
+            if (res.data.pay_done) {
+              // 已付款 到付款状态页
+              this.$router.replace({
+                path: '/order/paystatus',
+                query: { order_id: res.data.order_id, status: 1 }
+              })
+            } else {
+              // 未付款 到收银台
+              this.$router.replace({
+                path: '/order/pay/pay',
+                query: { order_id: res.data.order_id, goods_type: this.goodsType }
+              })
+            }
+          })
+        } else if (this.goodsType === 1) {
+          this.$messagebox.confirm('确定使用积分兑换该商品？').then(action => {
+            if (action === 'cancel') return
+            this.$http.withLoading({
+              url: '/api/orders/exchange',
+              data: data,
+              method: 'post'
+            }).then(res => {
+              this.$router.replace({
+                path: '/order/paystatus',
+                query: { order_id: res.data.order_id, status: 1 }
+              })
             })
-          } else {
-            // 未付款 到收银台
-            this.$router.replace({
-              path: '/order/pay/pay',
-              query: { orderid: res.data.order_id }
+          })
+        } else if (this.goodsType === 2) {
+          this.$messagebox.confirm('确定使用余额购买该积分卡？').then(action => {
+            if (action === 'cancel') return
+            this.$http.withLoading({
+              url: '/api/orders/card',
+              data: data,
+              method: 'post'
+            }).then(res => {
+              this.$router.replace({
+                path: '/order/paystatus',
+                query: { order_id: res.data.order_id, status: 1 }
+              })
             })
-          }
-        })
+          })
+        }
       },
       ticketConfirm () {
 

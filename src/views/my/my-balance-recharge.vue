@@ -2,14 +2,14 @@
   <div class="page recharge-page">
     <p style="margin-bottom: 0.48rem;">优惠充值：</p>
     <ul class="recharge-cards-list">
-      <li class="recharge-cards-item" v-for="item in rechargeCards">
-        <div class="recharge-cards-card" @click="recharge(item.amount)">
-          <span style="color: #f8be21;font-size: 24px;">{{ item.amount / 100 }}</span><span style="color: #f8be21;">元</span>
+      <li class="recharge-cards-item" v-for="item in rechargeCards" :key="item.key">
+        <div class="recharge-cards-card" @click="recharge(item.key)">
+          <span style="color: #f8be21;font-size: 24px;">{{ item.key / 100 }}</span><span style="color: #f8be21;">元</span>
           <br>
-          <span style="color: #c3c3c3;font-size: 12px;">送：{{ item.score }}积分</span>
+          <span style="color: #c3c3c3;font-size: 12px;">送：{{ item.give }}积分</span>
         </div>
       </li>
-      <li class="recharge-cards-item recharge-cards-other" ref="cardOther">
+      <li class="recharge-cards-item recharge-cards-other" v-if="rechargeCards.length" ref="cardOther">
         <div class="recharge-cards-card" @click="togglePopup">
           其他金额
         </div>
@@ -23,7 +23,7 @@
       :style="{ top: cardOtherBottom + 'px' }">
       <div class="popup-indicator" :style="{ left: indicatorLeft }"></div>
       <div class="recharge-control">
-        <input v-model.trim="inputAmount" type="number" class="recharge-input" placeholder="请输入10-1000的整数倍">
+        <input v-model.trim="inputAmount" type="number" class="recharge-input" :placeholder="inputPlaceHolder">
         <div class="recharge-btn" @click="popupRecharge">立即充值</div>
       </div>
       <div style="font-size: 12px;margin-left: 0.5em;margin-top: 0.2rem;">送：{{ scoreOther }}积分</div>
@@ -34,13 +34,9 @@
   export default {
     data () {
       return {
-        rechargeCards: [
-          { amount: 10, score: 100 },
-          { amount: 1000, score: 100 },
-          { amount: 1000, score: 100 },
-          { amount: 1000, score: 100 },
-          { amount: 1000, score: 100 }
-        ],
+        rechargeCards: [],
+        rechargeMin: null,
+        rechargeMax: null,
         popupVisible: false,
         cardOtherBottom: 0,
         inputAmount: ''
@@ -61,12 +57,26 @@
         if (pos === 1) return '12%'
         if (pos === 0) return '85%'
         return '46%'
+      },
+      inputPlaceHolder () {
+        if (!this.rechargeMin) return ''
+        return `请输入${this.rechargeMin / 100}-${this.rechargeMax / 100}的整数倍`
       }
     },
     mounted () {
-      this.cardOtherBottom = this.$refs.cardOther.getBoundingClientRect().bottom
+      this.fetchRecharges()
     },
     methods: {
+      fetchRecharges () {
+        this.$http.withLoading('/api/user/recharges').then(res => {
+          this.rechargeCards = res.data.recharge
+          this.rechargeMin = res.data.rule.min
+          this.rechargeMax = res.data.rule.max
+          setTimeout(() => {
+            this.cardOtherBottom = this.$refs.cardOther.getBoundingClientRect().bottom
+          })
+        })
+      },
       recharge (amount) {
         this.$messagebox.confirm('确定充值' + (amount / 100) + '元？').then(result => {
           if (result === 'cancel') return
@@ -118,8 +128,8 @@
           this.$toast('请输入数字')
         } else if (/\./.test(str)) {
           this.$toast('请输入整数金额')
-        } else if (num < 10 || num > 1000) {
-          this.$toast('只允许充值10~1000元')
+        } else if (num < this.rechargeMin || num > this.rechargeMax) {
+          this.$toast(`充值金额须为${this.rechargeMin / 100}元至${this.rechargeMax / 100}元之间`)
         } else {
           this.recharge(num * 100)
         }

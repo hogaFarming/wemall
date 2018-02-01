@@ -41,11 +41,14 @@
 <script>
   export default {
     data: function () {
+      const goodsType = +(this.$route.query.goods_type || 0)
+      const payWays = goodsType === 0 ? [{label: '微信支付', value: 'wechatpay'}] : [{label: '余额支付', value: 'balance'}]
       return {
-        orderId: this.$route.query.orderid,
+        goodsType: goodsType,
+        orderId: this.$route.query.order_id,
         orderData: {},
-        payWays: [{label: '微信支付', value: 'wechatpay'}],
-        selectedPayWay: 1,
+        payWays: payWays,
+        selectedPayWay: '',
         isWeChat: this.$utils.isWeChat(),
         modalVisible: false
       }
@@ -62,7 +65,9 @@
         })
       },
       confirmPay () {
-        this.wechatpay()
+        if (this.selectedPayWay === 'wechatpay') {
+          this.wechatpay()
+        }
       },
       wechatpay () {
         this.$http.withLoading({
@@ -96,6 +101,9 @@
             })
           }
         })
+      },
+      balancepay () {
+
       },
       onModalConfirm () {
         this.modalVisible = false

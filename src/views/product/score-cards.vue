@@ -1,14 +1,11 @@
 <template>
-  <!--积分兑换列表-->
+  <!--积分卡列表-->
   <div class="page product-list-page">
     <div v-if="!loading">
-      <div style="padding: 0.32rem 0.48rem;background-color:#fff;margin-bottom: 0.32rem;">
-        您的可用积分 <span style="font-size: 30px;vertical-align: middle;">{{ myScore }}</span>
-      </div>
       <div v-if="list.length">
         <div style="text-align: center;margin-bottom: 0.32rem;">
           <span style="display: inline-block;vertical-align: middle;height: 1px;width: 0.4rem;background-color:#c3c3c3;"></span>
-          <span style="display: inline-block;vertical-align: middle;margin: 0 5px;">推荐换购</span>
+          <span style="display: inline-block;vertical-align: middle;margin: 0 5px;">积分卡</span>
           <span style="display: inline-block;vertical-align: middle;height: 1px;width: 0.4rem;background-color:#c3c3c3;"></span>
         </div>
         <x-card-list
@@ -22,7 +19,7 @@
             @click.native="toProdDetail(item)"
             pic-height="4.2667rem">
             <span>{{ item.name }}</span>
-            <span slot="meta" style="color: #F55B5B;">{{ item.sale_price }}分</span>
+            <x-money :value="item.sale_price" slot="meta" color="red"></x-money>
           </x-card>
         </x-card-list>
       </div>
@@ -47,22 +44,15 @@
     },
     mounted: function () {
       this.queryList()
-      this.queryMyScore()
     },
     computed: {},
     methods: {
-      queryMyScore () {
-        this.$http('/api/user/integral/logs')
-          .then(result => {
-            this.myScore = result.data.integral
-          })
-      },
       /**
        * 查询列表
        */
       queryList (nextPage) {
         const options = {
-          url: nextPage || '/api/goodses/exchange',
+          url: nextPage || '/api/goodses/card',
           params: nextPage ? undefined : this.queries
         }
         this.$http.withLoading(options)
@@ -75,7 +65,7 @@
         cat.next_selected = val
       },
       toProdDetail (item) {
-        this.$router.push(`/product/${item.id}?is_exchange=1`)
+        this.$router.push(`/product/${item.id}`)
       }
     }
   }

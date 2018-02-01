@@ -19,7 +19,7 @@
     </div>
 
     <!--优惠套装 / sku规格-->
-    <div class="mgb">
+    <div class="mgb" v-show="false">
       <x-cell icon-right="more" @click.native="showProdCombo" bordered>
         <span class="black-3" style="margin-right: 1.2em;">促销</span>
         <span class="red">优惠套装</span>
@@ -47,7 +47,7 @@
     <long-detail :content="goodsInfo.desc"></long-detail>
 
     <!--底部按钮-->
-    <x-fixed-bottom class="product-detail-bottom">
+    <x-fixed-bottom v-if="goodsType === 0" class="product-detail-bottom">
       <div class="gocart-button" :class="{'has-goods': cartCount > 0}" @click="gotoCart">
         <div class="gocart-button-inner">
           <x-icon type="cart"></x-icon>
@@ -57,6 +57,9 @@
         </div>
       </div>
       <x-button type="primary" @click.native="addCart">加入购物车</x-button>
+      <x-button type="danger" @click.native="buyNow">立即购买</x-button>
+    </x-fixed-bottom>
+    <x-fixed-bottom v-if="goodsType === 1 || goodsType === 2" class="product-detail-bottom">
       <x-button type="danger" @click.native="buyNow">立即购买</x-button>
     </x-fixed-bottom>
 
@@ -90,6 +93,7 @@
         swipeImgs: [], // 轮播图
 
         goodsInfo: {},
+        goodsType: 0,
 
         skuButtons: ['cart', 'buy'],
         skuVisible: false,
@@ -134,6 +138,7 @@
         return this.$http.withLoading(`/api/goodses/${this.id}`).then(result => {
           const data = result.data
           this.goodsInfo = data
+          this.goodsType = data.type
           this.initSlider(data.images)
           if (data.is_sku) {
             this.initSkuData(data)
@@ -212,7 +217,8 @@
           goodsInfo: {
             name: data.name,
             title: data.goods_title,
-            image: this.getGoodsDefaultImage(data)
+            image: this.getGoodsDefaultImage(data),
+            type: data.type || 0
           }
         }
         const skuId = this.$route.query.sku_id
@@ -277,9 +283,10 @@
           this.$router.push({
             path: '/cart/order',
             query: {
-              goods_id: this.query.goods_id,
+              goods_id: this.id,
               sku_id: this.goodsInfo.skus[0].id,
-              num: 1 // TODO 立即购买数量
+              num: 1, // TODO 立即购买数量
+              goods_type: this.goodsType
             }
           })
         } else {
@@ -299,7 +306,8 @@
           query: {
             goods_id: this.id,
             sku_id: this.skuValue.skuId,
-            num: this.skuValue.amount
+            num: this.skuValue.amount,
+            goods_type: this.goodsType
           }
         })
       },
@@ -307,7 +315,7 @@
         this.comboVisible = true
       },
       showSku (isBuyNow) {
-        if (isBuyNow === true) {
+        if (isBuyNow === true || this.goodsType !== 0) {
           this.skuButtons = ['confirm']
         } else {
           this.skuButtons = ['buy', 'cart']

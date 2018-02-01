@@ -54,6 +54,7 @@ const router = new Router({
 
     // 订单
     { path: '/order/list', component: () => import('views/order/list'), meta: { requireAuth: true, title: '订单列表' } },
+    { path: '/order/paystatus', component: () => import('views/cart/pay-status'), meta: { requireAuth: true, title: '付款结果' } },
     { path: '/order/:id', component: () => import('views/order/detail'), meta: { requireAuth: true, title: '订单详情' } },
     { path: '/order/:id/comment', component: () => import('views/order/comment-form'), meta: { requireAuth: true, title: '评价订单' } },
     // { path: '/order-comments', component: () => import('views/order/comments'), meta: { requireAuth: true } },
@@ -71,6 +72,7 @@ const router = new Router({
     { path: '/product/list', component: () => import('views/product/list'), meta: { title: '商品列表' } },
     { path: '/product/search', component: () => import('views/product/search'), meta: { title: '商品搜索' } },
     { path: '/product/exchanges', component: () => import('views/product/exchanges'), meta: { title: '积分兑换' } },
+    { path: '/product/score-cards', component: () => import('views/product/score-cards'), meta: { title: '积分卡列表' } },
     { path: '/product/:id', component: () => import('views/product/detail'), meta: { title: '商品详情' } },
 
     { path: '/tickets', component: () => import('views/ticket/ticket'), meta: { title: '领券中心' } },
