@@ -17,18 +17,19 @@
         </ul>
       </div>
       <div class="category-content">
-        <div
-          class="category-sub-wrap"
-          v-for="subCat in subCategories"
-          :key="subCat.id"
-          v-show="subCat.children && subCat.children.length > 0">
-          <div class="category-sub-title">
-            <span class="category-sub-title-left"></span>
-            <span class="category-sub-title-text">{{ subCat.name }}</span>
-            <span class="category-sub-title-right"></span>
-          </div>
+        <!--<div-->
+          <!--class="category-sub-wrap"-->
+          <!--v-for="subCat in subCategories"-->
+          <!--:key="subCat.id"-->
+          <!--v-show="subCat.children && subCat.children.length > 0">-->
+        <div class="category-sub-wrap">
+          <!--<div class="category-sub-title">-->
+            <!--<span class="category-sub-title-left"></span>-->
+            <!--<span class="category-sub-title-text">{{ subCat.name }}</span>-->
+            <!--<span class="category-sub-title-right"></span>-->
+          <!--</div>-->
           <ul class="category-sub-list">
-            <li class="category-sub-item" v-for="subItem in subCat.children" :key="subItem.id" @click="onClickSubItem(subItem)">
+            <li class="category-sub-item" v-for="subItem in subCategories" :key="subItem.id" @click="onClickSubItem(subItem)">
               <x-image class="category-sub-image" :src="subItem.logo" width="1.6rem" height="1.6rem"></x-image>
               <div class="category-sub-label">{{ subItem.name }}</div>
             </li>
@@ -107,7 +108,10 @@
         this.currentCat = id
       },
       onClickSubItem (item) {
-        this.$router.push('/product/list')
+        this.$router.push({
+          url: '/product/list',
+          query: {  }
+        })
       }
     }
   }

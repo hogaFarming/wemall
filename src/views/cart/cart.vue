@@ -88,6 +88,30 @@
         <br><br>
         <x-button @click.native="$router.push({ path: '/product/list' })" type="primary" inline pill>随便逛逛</x-button>
       </p>
+      <x-fixed-bottom>
+        <div class="bottom-nav">
+          <div class="bottom-nav-item" @click="$router.push('/')">
+            <x-icon type="cart"></x-icon>
+            <br>
+            首页
+          </div>
+          <div class="bottom-nav-item" @click="$router.push('/product/category')">
+            <x-icon type="cart"></x-icon>
+            <br>
+            分类
+          </div>
+          <div class="bottom-nav-item" @click="$router.push('/cart')">
+            <x-icon type="cart"></x-icon>
+            <br>
+            购物车
+          </div>
+          <div class="bottom-nav-item" @click="$router.push('/my/home')">
+            <x-icon type="cart"></x-icon>
+            <br>
+            我的
+          </div>
+        </div>
+      </x-fixed-bottom>
     </template>
 
     <!--<x-cell bordered>-->
