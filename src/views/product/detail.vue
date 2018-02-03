@@ -8,7 +8,7 @@
         </x-slider-item>
       </x-slider>
       <x-icon v-if="goodsInfo.is_collect === 0" class="product-like-icon" @click.native="likeGoods" type="praise"></x-icon>
-      <x-icon class="product-share-icon" @click.native="shareGoods" type="share"></x-icon>
+      <x-icon class="product-share-icon" @click.native="shareGoods" type="share" v-show="false"></x-icon>
     </div>
 
     <!--商品标题-->
@@ -19,8 +19,8 @@
     </div>
 
     <!--优惠套装 / sku规格-->
-    <div class="mgb" v-show="false">
-      <x-cell icon-right="more" @click.native="showProdCombo" bordered>
+    <div class="mgb">
+      <x-cell icon-right="more" @click.native="showProdCombo" bordered v-show="false">
         <span class="black-3" style="margin-right: 1.2em;">促销</span>
         <span class="red">优惠套装</span>
         <span>| 最高省200.00元</span>

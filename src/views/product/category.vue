@@ -109,8 +109,8 @@
       },
       onClickSubItem (item) {
         this.$router.push({
-          url: '/product/list',
-          query: {  }
+          path: '/product/list',
+          query: { cat_ids: item.id + '' }
         })
       }
     }

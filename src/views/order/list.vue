@@ -23,6 +23,8 @@
           {{ goods.goods_name }}
           <div slot="secondary">{{ goods | goodsSkuName }}</div>
           <x-money :value="goods.sale_price" slot="bottom-left"></x-money>
+          <!--<x-money v-if="item.type === 0 || item.type === 2" :value="goods.sale_price" slot="bottom-left"></x-money>-->
+          <!--<span v-if="item.type === 1" slot="bottom-left"></span>-->
           <span slot="bottom-right">x{{ goods.num }}</span>
         </x-media-object>
         <div class="mod_pd bdb order-sum">

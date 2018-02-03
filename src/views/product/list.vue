@@ -44,7 +44,7 @@
           <div class="filter-section-body">
             <x-label-radio
               :options="cat.children"
-              :value="cat.next_selected"
+              :value="selectedCatIds[cat.id]"
               :keys="['name', 'id']"
               @input="catSelectChange(cat, $event)">
             </x-label-radio>
@@ -75,9 +75,9 @@
       return {
         loading: true,
         searchText: this.$route.query.goods_name || '',
+        selectedCatIds: {},
         currentTab: 1,
         priceDir: 1,
-        selectedBrands: undefined,
         startPrice: undefined,
         endPrice: undefined,
 
@@ -91,12 +91,12 @@
     mounted: function () {
       this.search(this.searchText)
     },
-    computed: {},
+    computed: {
+    },
     methods: {
       search () {
         this.queries = {
           goods_name: this.searchText || undefined,
-          goods_brand_id: this.selectedBrands,
           // start_price: this.startPrice * 100 || undefined,
           // end_price: this.endPrice * 100 || undefined,
           status: this.currentTab === 1 ? 2 : 3, // 1根据评价分数排序2根据销量3根据价格4根据上架时间
@@ -112,12 +112,18 @@
           }
         }
         // 分类
-        let goods_cat_id_second = []
-        for (let i in this.categories) {
-          if (this.categories[i].next_selected) {
-            goods_cat_id_second.push(this.categories[i].next_selected)
-          }
+        let goods_cat_id_second
+        if (this.categories && this.categories.length) {
+          goods_cat_id_second = Object.keys(this.selectedCatIds).map(key => this.selectedCatIds[key])
+        } else {
+          let cat_ids = this.$route.query.cat_ids || ''
+          goods_cat_id_second = cat_ids.split(',').map(i => +i)
         }
+        // for (let i in this.categories) {
+        //   if (this.categories[i].next_selected) {
+        //     goods_cat_id_second.push(this.categories[i].next_selected)
+        //   }
+        // }
         if (goods_cat_id_second.length > 0) {
           this.queries.goods_cat_id_second = goods_cat_id_second.join(',')
         }
@@ -149,6 +155,17 @@
                 res.list[i].next_selected = undefined
               }
               this.categories = res.list
+
+              const cat_ids = this.$route.query.cat_ids || ''
+              const selectedCatIds = {}
+              cat_ids.split(',').forEach(catId => {
+                this.categories.forEach(cat => {
+                  if (cat.children && cat.children.some(subCat => subCat.id == catId)) {
+                    selectedCatIds[cat.id] = +catId
+                  }
+                })
+              })
+              this.selectedCatIds = selectedCatIds
             }
           })
       },
@@ -173,7 +190,11 @@
         }
       },
       catSelectChange (cat, val) {
-        cat.next_selected = val
+        // cat.next_selected = val
+        this.selectedCatIds = {
+          ...this.selectedCatIds,
+          [cat.id]: val
+        }
       },
       /**
        * 弹出筛选器

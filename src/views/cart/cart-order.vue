@@ -34,14 +34,14 @@
     </x-cell>
 
     <!--优惠券-->
-    <x-cell v-if="goodsType === 0" class="bdb" title="优惠券" icon-right="next_page" @click.native="showTickets">
+    <x-cell v-if="goodsType === 0" v-show="false" class="bdb" title="优惠券" icon-right="next_page" @click.native="showTickets">
       <span v-if="loading"></span>
       <span slot="right" v-else-if="coupon.length">有可用优惠券</span>
       <span slot="right" v-else>无可用优惠券</span>
     </x-cell>
 
     <!--积分-->
-    <x-cell v-if="goodsType === 0" class="mgb">
+    <x-cell v-if="goodsType === 0" v-show="false" class="mgb">
       <p class="black-3" style="margin-bottom: 5px;">当前积分：{{ capital.integral }}</p>
       <p>可用{{ capital.integral }}积分抵扣
         <x-money :value="capital.integral_price"></x-money>

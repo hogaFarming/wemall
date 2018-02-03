@@ -117,7 +117,8 @@
           }).then(res => {
             this.$toast('提交成功')
             // FIXME why location
-            location.href = '/refund/' + this.goodsId
+            // location.href = '/refund/' + this.goodsId
+            this.$router.replace('/refund/' + this.goodsId)
           })
         })
       },
