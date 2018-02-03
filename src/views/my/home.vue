@@ -98,7 +98,7 @@
         this.$router.push(path)
       },
       sign () {
-
+        this.$router.push('/my/score-sign')
       }
     }
   }

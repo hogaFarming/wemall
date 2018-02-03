@@ -48,8 +48,26 @@
       //   return this.$refs.cardOther && this.$refs.cardOther.$el.getBoundingClientRect().bottom
       // }
       scoreOther () {
-        if (!this.inputAmount) return 0
-        return Math.round(this.inputAmount / 2)
+        if (!this.inputAmount || !this.rechargeCards.length) return 0
+
+        let str = this.inputAmount
+        if (!str) return 0
+        let num = +str
+        if (isNaN(num)) {
+          return 0
+        } else if (/\./.test(str)) {
+          return 0
+        } else if (num * 100 < this.rechargeMin) {
+          return 0
+        } else {
+          let result = 0
+          this.rechargeCards.forEach(item => {
+            if (num * 100 >= item.key) {
+              result = item.give
+            }
+          })
+          return result
+        }
       },
       indicatorLeft () {
         const cardCount = this.rechargeCards.length + 1

@@ -2,16 +2,16 @@
   <div class="page score-sign-page">
     <div class="banner">
       <p style="margin-bottom: 0.1rem;">您的可用积分</p>
-      <p><span style="font-size: 30px;">5999</span>积分</p>
+      <p><span style="font-size: 30px;">{{ totalScore }}</span>积分</p>
       <x-button @click.native="$router.push('/order/pay/balance-recharge')" type="primary" ghost pill inline>去充值</x-button>
     </div>
     <div class="sign-records">
       <div class="sign-records-line"></div>
       <ul class="sign-records-list">
-        <li v-for="item in records" :key="records.id">
-          <span>+{{ item.score }}</span>
+        <li v-for="(item, index) in signRecords" :key="index">
+          <span>{{ item.flag ? ('+' + item.score) : '&nbsp;' }}</span>
           <br>
-          <x-icon type="me_balance"></x-icon>
+          <x-icon :type="item.flag ? 'me_balance' : 'me_balance02'"></x-icon>
           <br>
           <span>{{ item.label }}</span>
         </li>
@@ -30,23 +30,44 @@
   export default {
     data () {
       return {
-        records: [
-          { id: 1, score: 888, label: '1天' },
-          { id: 2, score: 888, label: '1天' },
-          { id: 3, score: 888, label: '1天' },
-          { id: 4, score: 888, label: '1天' },
-          { id: 5, score: 888, label: '1天' },
-          { id: 6, score: 888, label: '1天' },
-          { id: 7, score: 888, label: '1天' }
-        ]
+        totalScore: '--',
+        signDay: 0,
+        scoreToday: 0,
+        signRecords: [],
+        isSigned: true
       }
     },
     mounted () {
-
+      this.fetchProfile()
+      this.fetchSignRecords()
     },
     methods: {
+      fetchProfile () {
+        this.$http.withLoading('/api/users').then(res => {
+          this.totalScore = res.data.integral
+        })
+      },
+      fetchSignRecords () {
+        this.$http.withLoading('/api/checkIn/fufenConfig').then(res => {
+          this.signDay = res.data.now.day || 0
+          this.isSigned = !!res.data.is_checked
+          let count = 7
+          let records = []
+          while (count) {
+            records.unshift({
+              label: count + '天',
+              score: res.data.config[count] || 0,
+              flag: count <= this.signDay
+            })
+            count -= 1
+          }
+          this.signRecords = records
+        })
+      },
       sign () {
-
+        this.$http.withLoading('/api/checkIn/addLog').then(res => {
+          this.$toast('签到成功')
+        })
       }
     }
   }

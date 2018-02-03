@@ -42,6 +42,23 @@ export default {
       return utils.timeFormat(value, '{YYYY}-{Mo}-{DD}')
     })
 
+    Vue.filter('justMonthDay', function (value) {
+      return utils.timeFormat(value, '{Mo}/{DD}')
+    })
+
+    Vue.filter('balanceLogItem', function (value) {
+      // 1,余额充值;2,余额支付订单;3,售后退款;4,余额提现;5,余额提现退回；6，余额购买福分卡
+      const logTypes = {
+        1: '余额充值',
+        2: '余额支付订单',
+        3: '售后退款',
+        4: '余额提现',
+        5: '余额提现退回',
+        6: '余额购买福分卡'
+      }
+      return logTypes[value] || ''
+    })
+
     Vue.filter('orderNs', function (value) {
       const match = value.toString().match(/(\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)/)
       const [whole, year, month, day, hour, min, sec] = match
