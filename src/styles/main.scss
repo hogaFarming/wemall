@@ -26,6 +26,12 @@ html {
 body {
   font-size: 14px;
 }
+input {
+  -webkit-user-select: initial;
+  -ms-user-select: initial;
+  -moz-user-select: initial;
+  user-select: initial;
+}
 
 .pd {
   padding: 0.4267rem 0.48rem;

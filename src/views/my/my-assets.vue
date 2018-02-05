@@ -28,15 +28,15 @@
       }
     },
     mounted () {
-      this.fetchUserProfile()
+      this.fetchUserCapitals()
     },
     methods: {
-      fetchUserProfile () {
-        this.$http.withLoading('/api/users')
+      fetchUserCapitals () {
+        this.$http.withLoading('/api/user/capitals')
           .then(res => {
-            this.balance = res.data.balance + '元'
-            this.score = res.data.integral + '积分'
-            this.cards = (res.data.cards || 0) + '张'
+            this.balance = res.data.user_capital.balance + '元'
+            this.score = res.data.user_capital.fufen + '积分'
+            this.cards = (res.data.user_capital.cards || 0) + '张'
           })
       },
       toMyBalance () {

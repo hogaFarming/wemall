@@ -11,6 +11,7 @@ import filters from './filters'
 import cache from 'utils/cache'
 import utils from 'utils/common'
 import config from 'core/config'
+import wechat from 'core/wechat'
 
 Vue.use(require('vue-wechat-title'))
 
@@ -25,6 +26,7 @@ Vue.prototype.$utils = app.utils = utils
 Vue.prototype.$service = app.service = service
 Vue.prototype.$auth = app.auth = auth
 Vue.prototype.$http = app.http = http
+Vue.prototype.$wechat = app.wechat = wechat
 
 Vue.prototype.$loading = app.loading = (text) => {
   if (text === false) {

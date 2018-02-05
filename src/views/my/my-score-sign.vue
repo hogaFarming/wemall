@@ -2,7 +2,7 @@
   <div class="page score-sign-page">
     <div class="banner">
       <p style="margin-bottom: 0.1rem;">您的可用积分</p>
-      <p><span style="font-size: 30px;">{{ totalScore }}</span>积分</p>
+      <p><span style="font-size: 30px;">{{ totalScore }}</span> 积分</p>
       <x-button @click.native="$router.push('/order/pay/balance-recharge')" type="primary" ghost pill inline>去充值</x-button>
     </div>
     <div class="sign-records">
@@ -38,13 +38,13 @@
       }
     },
     mounted () {
-      this.fetchProfile()
+      this.refreshScore()
       this.fetchSignRecords()
     },
     methods: {
-      fetchProfile () {
-        this.$http.withLoading('/api/users').then(res => {
-          this.totalScore = res.data.integral
+      refreshScore () {
+        this.$http.withLoading('/api/user/capitals').then(res => {
+          this.totalScore = res.data.user_capital.fufen
         })
       },
       fetchSignRecords () {
@@ -67,6 +67,8 @@
       sign () {
         this.$http.withLoading('/api/checkIn/addLog').then(res => {
           this.$toast('签到成功')
+          this.refreshScore()
+          this.fetchSignRecords()
         })
       }
     }

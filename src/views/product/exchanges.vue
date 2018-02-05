@@ -52,9 +52,9 @@
     computed: {},
     methods: {
       queryMyScore () {
-        this.$http('/api/user/integral/logs')
-          .then(result => {
-            this.myScore = result.data.integral
+        this.$http('/api/user/capitals')
+          .then(res => {
+            this.myScore = res.data.user_capital.fufen
           })
       },
       /**
