@@ -105,15 +105,6 @@
           })
         })
       }
-    },
-    filters: {
-      refundType (val) {
-        const text = {
-          1: '仅退款',
-          2: '退货退款'
-        }
-        return text[val] || '--'
-      }
     }
   }
 </script>

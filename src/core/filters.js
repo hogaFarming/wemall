@@ -8,6 +8,30 @@ export default {
       return ORDER_STATUS[value] || '--'
     })
 
+    Vue.filter('refundType', function (value) {
+      const text = {
+        1: '仅退款',
+        2: '退货退款'
+      }
+      return text[value] || '--'
+    })
+
+    Vue.filter('refundStatus', function (value) {
+      switch (value) {
+        case 0:
+        case 2:
+        case 5:
+          return '处理中'
+        case 3:
+        case 4:
+          return '退款关闭'
+        case 1:
+          return '退款成功'
+        default:
+          return ''
+      }
+    })
+
     Vue.filter('goodsStatus', function (value) {
       if (!value && value !== 0) return '--'
       if (value === 1) return ''
@@ -55,6 +79,35 @@ export default {
         4: '余额提现',
         5: '余额提现退回',
         6: '余额购买福分卡'
+      }
+      return logTypes[value] || ''
+    })
+
+    Vue.filter('fufenLogItem', function (value) {
+      /*
+      * 积分类型（type字段）
+      1,充值赠送福分;
+      2,分享赠送福分;
+      3,福分兑换商品消耗;
+      4,福分卡购买;
+      5,签到获取;
+      6,初次绑定手机;
+      50，牛牛游戏币兑换福分
+      51，牛牛游戏币兑换福分
+      52，推币机游戏币兑换福分
+      53，推币机游戏币兑换福分
+      */
+      const logTypes = {
+        1: '充值赠送福分',
+        2: '分享赠送福分',
+        3: '福分兑换商品消耗',
+        4: '福分卡购买',
+        5: '签到获取',
+        6: '初次绑定手机',
+        50: '牛牛游戏币兑换福分',
+        51: '牛牛游戏币兑换福分',
+        52: '推币机游戏币兑换福分',
+        53: '推币机游戏币兑换福分'
       }
       return logTypes[value] || ''
     })

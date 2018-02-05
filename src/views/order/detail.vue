@@ -29,10 +29,11 @@
           <x-media-object :pic="goods.goods_cover" padding bordered>
             <div @click="gotoGoodsDetail(goods)">{{ goods.goods_name }}</div>
             <span slot="secondary">{{ goods | goodsSkuName }}</span>
-            <x-money :value="goods.sale_price" slot="bottom-left"></x-money>
+            <x-money v-if="order.type == 0 || order.type == 2" :value="goods.sale_price" slot="bottom-left"></x-money>
+            <span v-if="order.type == 1" slot="bottom-left">{{ order.paid_fufen }}积分</span>
             <span slot="bottom-right">x{{ goods.num }}</span>
           </x-media-object>
-          <x-cell v-if="order.status > 0">
+          <x-cell v-if="order.status > 0 && order.type == 0">
             <div slot="right">
               <x-button @click.native="applyRefund(goods, 1)" v-if="order.status === 1 && goods.status === 1" pill ghost inline>申请退款</x-button>
               <x-button @click.native="applyRefund(goods, 2)" v-if="order.status > 1 && order.status < 5 && goods.status === 1" pill ghost inline>申请售后</x-button>
@@ -44,11 +45,16 @@
 
       <!--订单价格-->
       <div class="order-price mgb">
-        <x-cell>商品总价<x-money :value="order.goods_price" slot="right" size="small"></x-money></x-cell>
-        <x-cell>运费（快递）<x-money :value="order.express_price" slot="right" size="small"></x-money></x-cell>
-        <x-cell>优惠券<x-money :value="order.coupon_price" slot="right" size="small"></x-money></x-cell>
-        <!--TODO <x-cell>积分<x-money :value="1764" slot="right" size="small"></x-money></x-cell>-->
-        <x-cell>实付款（含运费）<x-money :value="order.actual_price" slot="right" color="red"></x-money></x-cell>
+        <template v-if="order.type == 0 || order.type == 2">
+          <x-cell>商品总价<x-money :value="order.goods_price" slot="right" size="small"></x-money></x-cell>
+          <x-cell>运费（快递）<x-money :value="order.express_price" slot="right" size="small"></x-money></x-cell>
+          <!--<x-cell>优惠券<x-money :value="order.coupon_price" slot="right" size="small"></x-money></x-cell>-->
+          <!--TODO <x-cell>积分<x-money :value="1764" slot="right" size="small"></x-money></x-cell>-->
+          <x-cell>实付款（含运费）<x-money :value="order.actual_price" slot="right" color="red"></x-money></x-cell>
+        </template>
+        <template v-if="order.type == 1">
+          <x-cell>实付<span slot="right" style="color: red;">{{ order.paid_fufen }}积分</span></x-cell>
+        </template>
       </div>
       <x-field-set class="mgb">
         <x-field-item label="订单编号">{{ order.order_sn }}</x-field-item>

@@ -22,13 +22,15 @@
           padding>
           {{ goods.goods_name }}
           <div slot="secondary">{{ goods | goodsSkuName }}</div>
-          <x-money :value="goods.sale_price" slot="bottom-left"></x-money>
-          <!--<x-money v-if="item.type === 0 || item.type === 2" :value="goods.sale_price" slot="bottom-left"></x-money>-->
-          <!--<span v-if="item.type === 1" slot="bottom-left"></span>-->
+          <!--<x-money :value="goods.sale_price" slot="bottom-left"></x-money>-->
+          <x-money v-if="item.type === 0 || item.type === 2" :value="goods.sale_price" slot="bottom-left"></x-money>
+          <span v-if="item.type === 1" slot="bottom-left">{{ item.paid_fufen }}积分</span>
           <span slot="bottom-right">x{{ goods.num }}</span>
         </x-media-object>
         <div class="mod_pd bdb order-sum">
-          共 {{ item.total_num }} 件商品，合计： <x-money :value="item.total_price"></x-money>
+          共 {{ item.total_num }} 件商品，合计：
+          <x-money v-if="item.type === 0 || item.type === 2" :value="item.total_price"></x-money>
+          <span v-if="item.type === 1">{{ item.paid_fufen }}积分</span>
         </div>
         <div class="text-right order-btns" v-if="item.status !== 1">
           <x-button v-if="item.status === 3 ||item.status === 5 || item.status === 7" @click.native="deleteOrder(item)" pill inline ghost>删除订单</x-button>
