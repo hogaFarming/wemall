@@ -228,7 +228,7 @@ const utils = {
         }
       })
       if (key) {
-        return result.key
+        return result[key]
       }
       return result
     }
