@@ -92,23 +92,7 @@ export function gotoLoginPage (callback) {
   if (callback === true) {
     backUrl = window.app.root.$route.fullPath
   }
-  // router.push({ path: '/login', query: { callback: backUrl } })
-
-  cache.set('isLogin', 0)
-  cache.set('isAuth', 0)
-  if (utils.isWeChat()) {
-    auth.check({
-      type: 'wechatOauth',              // wechatOauth, login
-      redirectUrl: '/api/wechat/auth',  // 验证不通过跳转的地址
-      callbackUrl: backUrl        // 返回的地址
-    })
-  } else {
-    auth.check({
-      type: 'login',                    // wechatOauth, login
-      redirectUrl: '/login',            // 验证不通过跳转的地址
-      callbackUrl: backUrl       // 返回的地址
-    })
-  }
+  auth.redirectToWxAuth(backUrl)
 }
 
 export default router

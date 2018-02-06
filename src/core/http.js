@@ -2,6 +2,7 @@ import axios from 'axios'
 import auth from './authorization'
 import { gotoLoginPage } from './router'
 import log from 'utils/log'
+import utils from 'utils/common'
 
 // const request = axios.create({
 //   baseURL: 'http://api.sc.shouyouhuyu.com',
@@ -14,6 +15,10 @@ const request = axios
 request.interceptors.request.use(config => {
   // debugger
   config.url = config.url.replace(/^\/api/, `${app.config.api.url}/api`)
+  if (utils.url.params('usertest')) {
+    config.url += /\?/.test(config.url) ? '&' : '?'
+    config.url += 'usertest=' + utils.url.params('usertest')
+  }
   config.headers.common.Authorization = auth.getToken()
   config.headers.common['X-ISAPI'] = 1
   if (config.headers.Authorization !== undefined) {
@@ -55,7 +60,7 @@ request.interceptors.response.use(response => {
       // })
       return Promise.resolve().then(result => {
         gotoLoginPage(true)
-        const err = new Error('请重新登录')
+        const err = new Error('重新登录')
         err.response = error.response
         throw err
       })

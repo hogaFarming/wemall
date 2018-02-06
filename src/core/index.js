@@ -59,26 +59,27 @@ Vue.component(Picker.name, Picker)
 router.beforeEach((to, from, next) => {
   // return next()
   // if (!to.matched.some(record => record.meta.requireAuth)) return next()
-
-  if (utils.isWeChat()) {
-    if (cache.get('isAuth') === '1' && cache.get('isLogin') === '1') {
-      next()
-      return
+  let nextRoute
+  if (from && from.query && from.query.usertest && !to.query.usertest) {
+    nextRoute = {
+      path: to.path,
+      params: to.params,
+      query: to.query || {}
     }
-
-    auth.check({
-      type: 'wechatOauth',              // wechatOauth, login
-      redirectUrl: '/api/wechat/auth',  // 验证不通过跳转的地址
-      url: to.path,                     // 需要验证的地址
-      callbackUrl: to.fullPath          // 返回的地址
-    }, next)
+    nextRoute.query.usertest = from.query.usertest
+  }
+  console.log(JSON.stringify(nextRoute))
+  if (app.isLogin) {
+    next(nextRoute)
   } else {
-    auth.check({
-      type: 'login',                    // wechatOauth, login
-      redirectUrl: '/login',            // 验证不通过跳转的地址
-      url: to.path,                     // 需要验证的地址
-      callbackUrl: to.fullPath          // 返回的地址
-    }, next)
+    auth.init(to.fullPath).then((willRedirectWxAuth) => {
+      if (!willRedirectWxAuth) {
+        app.isLogin = true
+        next(nextRoute)
+      }
+    }, err => {
+      app.toast('登录失败，请刷新页面重试')
+    })
   }
 })
 
