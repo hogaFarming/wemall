@@ -1,18 +1,17 @@
 <template>
-  <div>
-
+  <div class="page profile-page">
     <div class="profile-field">
       <div class="profile-label">头像</div>
-      <div class="profile-value">
-        <div class="image" style="width: 1.6rem;height: 1.6rem;">
-          <img :src="profile.headimg">
-        </div>
+      <div class="profile-value" id="container1">
+        <div id="progress1" v-show="false"></div>
+        <x-image :src="profile.avatar" width="1.6rem" height="1.6rem" style="display: inline-block;" id="pickfiles1"></x-image>
       </div>
     </div>
     <div class="profile-field mgb">
       <div class="profile-label">背景</div>
-      <div class="profile-value">
-        <div class="image" style="width: 2.4rem;height: 1.6rem;"><img :src="profile.background"></div>
+      <div class="profile-value" id="container2">
+        <div id="progress2" v-show="false"></div>
+        <x-image :src="profile.background" width="2.4rem" height="1.6rem" style="display: inline-block;" id="pickfiles2"></x-image>
       </div>
     </div>
     <div @click="showPopup('username')" class="profile-field" icon-right="more">
@@ -65,12 +64,17 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue'
+  import { Upload } from 'hanzi-mobile-package'
+
+  Vue.use(Upload)
+
   const Gender = {
     0: '未知',
     1: '男',
     2: '女'
   }
-  // TODO 上传头像
+
   export default {
     data: function () {
       return {
@@ -98,6 +102,7 @@
     },
     mounted () {
       this.fetchProfile()
+      this.initUpload()
     },
     methods: {
       fetchProfile () {
@@ -111,7 +116,32 @@
         })
       },
       initUpload () {
-
+        new upload({
+          container: 'container1',     // 容器ID
+          browse_button: 'pickfiles1', // 按钮ID
+          progress: 'progress1',        // 进度条ID
+          type: 'goods_comment',       // 请求接口时的传参，upload_type
+          setting: 'local',          // local：本地，cloud：云
+          chunk_size: '200kb',       // 分段传输的大小
+          group: ['img'],
+          url: '/api/upload',   // 上传路径
+          callback: (re) => {
+            this.updateProfile('headimg', re.data.upload_id)
+          }
+        })
+        new upload({
+          container: 'container2',     // 容器ID
+          browse_button: 'pickfiles2', // 按钮ID
+          progress: 'progress2',        // 进度条ID
+          type: 'goods_comment',       // 请求接口时的传参，upload_type
+          setting: 'local',          // local：本地，cloud：云
+          chunk_size: '200kb',       // 分段传输的大小
+          group: ['img'],
+          url: '/api/upload',   // 上传路径
+          callback: (re) => {
+            this.updateProfile('background', re.data.upload_id)
+          }
+        })
       },
       formatBirthday (st) {
         if (!st) return ''

@@ -17,12 +17,13 @@
         </x-field-set>
         <x-cell v-if="data.images.length">
           <p class="fs-me mgb">凭证附件</p>
-          <ul class="picrow">
-            <!--TODO test seeImgs-->
-            <li v-for="img in data.images" @click="seeImgs(item.path, data.images)">
-              <img :src="item.path" alt="comemnt">
-            </li>
-          </ul>
+          <div class="picrow">
+            <ul>
+              <li v-for="item in data.images" @click="seeImg(item.path, data.images)">
+                <img :src="item.path" alt="comemnt">
+              </li>
+            </ul>
+          </div>
         </x-cell>
       </div>
       <x-field

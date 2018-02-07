@@ -10,7 +10,7 @@
         <x-praise-input v-model="item.star"></x-praise-input>
       </x-cell>
       <x-textarea v-model="item.content" placeholder="说说宝贝的优点和美中不足的地方吧…"></x-textarea>
-      <x-image-upload style="padding: 0.2rem 0.48rem 0.4267rem;"></x-image-upload>
+      <x-image-upload style="padding: 0.2rem 0.48rem 0.4267rem;" v-model="item.images"></x-image-upload>
     </div>
     <x-fixed-bottom>
       <x-button @click.native="submit" type="primary" size="full">发布</x-button>
@@ -40,52 +40,6 @@
             }
           })
         })
-
-        // let that = this;
-        // tools.ajax({
-        //   url: '/api/order/goods/'+that.order_id,
-        //   ajaxData: {},
-        //   successFun: function (res) {
-        //
-        //     let arr = [];
-        //
-        //     for(let item in res.list){
-        //
-        //       res.list[item].imgs = [];
-        //
-        //       var push={
-        //         'order_goods_id':res.list[item].id,
-        //         'star':5,
-        //         'content':'',
-        //         'is_anonymous':0
-        //       };
-        //
-        //       that.comment.push(push);
-        //
-        //       that.$nextTick(function () {
-        //         setTimeout(function(){
-        //           arr[item] = new upload({
-        //             container: 'container' + item,     //容器ID
-        //             browse_button: 'pickfiles' + item, //按钮ID
-        //             progress:'progress' + item,        //进度条ID
-        //             type: 'goods_comment',       //请求接口时的传参，upload_type
-        //             setting : 'local',          //local：本地，cloud：云
-        //             chunk_size : '200kb',       //分段传输的大小
-        //             group: ['img'],
-        //             url: '/api/upload',   //上传路径
-        //             callback: function (re) {
-        //               res.list[item].imgs.push(re.data);
-        //             }
-        //           });
-        //         },0);
-        //       })
-        //
-        //     }
-        //
-        //     that.list = res.list;
-        //
-        //   }
-        // })
       },
       validateForm () {
         const isContentEmpty = this.commentList.some(item => !item.content)
@@ -105,12 +59,13 @@
           const data = {
             order_id: this.id,
             comment: this.commentList.map(item => {
-              const upload_ids = ''
+              const upload_ids = (item.images || []).map(i => i.upload_id).join(',')
               return {
                 order_goods_id: item.id,
                 star: item.star,
                 content: item.content,
-                is_anonymous: 0
+                is_anonymous: 0,
+                upload_ids: upload_ids || undefined
               }
             })
           }

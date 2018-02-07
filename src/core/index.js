@@ -18,6 +18,26 @@ Vue.use(require('vue-wechat-title'))
 const app = window.app = { router }
 app.config = config
 
+window.config = config
+window.tools = {
+  cache: {
+    get (key) {
+      if (key === 'Authorization') return cache.get('token')
+      return cache.get(key)
+    }
+  },
+  ajax ({ url, ajaxData, successFun, errorFun, type }) {
+    http({
+      url: url,
+      data: ajaxData,
+      method: type
+    }).then(successFun, errorFun)
+  },
+  alert: {
+    error: Toast
+  }
+}
+
 Vue.use(filters)
 Vue.use(globalMixin)
 

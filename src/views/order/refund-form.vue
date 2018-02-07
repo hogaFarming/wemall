@@ -41,7 +41,7 @@
       <x-field class="mgb" label="退款备注" placeholder="选填" v-model="remark" :attr="{ maxlength: 100 }"></x-field>
       <x-cell>
         <div class="mgb">上传凭证：</div>
-        <x-image-upload :limit="3"></x-image-upload>
+        <x-image-upload :limit="3" v-model="images"></x-image-upload>
       </x-cell>
       <x-fixed-bottom>
         <x-button type="primary" @click.native="submit" size="full">提交</x-button>
@@ -106,7 +106,11 @@
         } else if (this.refundAmount) {
           data.required_amount = this.refundAmount * 100
         }
-        // TODO 上传图片
+
+        // 上传凭证
+        if (this.images.length > 0) {
+          data.image = this.images.map(item => ({ img_id: item.upload_id }))
+        }
 
         this.$messagebox.confirm('确认提交申请吗？').then(action => {
           if (action === 'cancel') return
@@ -128,6 +132,9 @@
           return '请输入退款金额'
         }
         return ''
+      },
+      onUpload (item) {
+        console.log(item)
       }
     }
   }

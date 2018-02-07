@@ -7,23 +7,37 @@
     props: ['width', 'height', 'src'],
     data () {
       return {
-        image: null
+        image: null,
+        loaded: false
       }
     },
     computed: {
       containerStyle () {
         return {
           width: this.width,
-          height: this.height
+          height: this.height,
+          backgroundColor: this.loaded ? 'transparent' : '#d8d8d8'
         }
       }
     },
     mounted () {
-      this.image = new Image()
-      this.image.onload = () => {
-        this.$refs.container.appendChild(this.image)
+      this.loadImg()
+    },
+    watch: {
+      src () {
+        this.loadImg()
       }
-      this.image.src = this.src
+    },
+    methods: {
+      loadImg () {
+        let image = new Image()
+        image.onload = () => {
+          this.$refs.container.innerHTML = ''
+          this.$refs.container.appendChild(image)
+          this.loaded = true
+        }
+        image.src = this.src
+      }
     }
   }
 </script>
@@ -32,7 +46,6 @@
     display: -webkit-box;
     -webkit-box-align: center;
     -webkit-box-pack: center;
-    background-color: #d8d8d8;
     position: relative;
   }
   .x-image--bordered {
