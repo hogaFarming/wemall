@@ -53,8 +53,7 @@
         })
       },
       selectAddress (addr) {
-        let that = this
-        if(!this.query.type) return
+        if (!this.query.type) return
 
         const query = {
           ...this.query,
@@ -62,7 +61,7 @@
           address_id: addr.id
         }
         // query.data = decodeURIComponent(this.url.params('data'));
-        this.$router.replace({path: '/cart/order', query});
+        this.$router.replace({path: '/cart/order', query})
       },
       setDefault (addr, checked) {
         if (checked) {
@@ -88,6 +87,14 @@
         this.$router.push({
           path: '/my/address/edit',
           query: this.query
+        })
+      },
+      delAddress (addr) {
+        this.$http.withLoading({
+          url: `/api/user/address/${addr.id}`,
+          method: 'delete'
+        }).then(res => {
+          this.fetchList()
         })
       }
     }

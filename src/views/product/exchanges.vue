@@ -75,7 +75,7 @@
         cat.next_selected = val
       },
       toProdDetail (item) {
-        this.$router.push(`/product/${item.id}?is_exchange=1`)
+        this.$router.push(`/product/${item.id}`)
       }
     }
   }

@@ -116,8 +116,8 @@
         if (this.categories && this.categories.length) {
           goods_cat_id_second = Object.keys(this.selectedCatIds).map(key => this.selectedCatIds[key])
         } else {
-          let cat_ids = this.$route.query.cat_ids || ''
-          goods_cat_id_second = cat_ids.split(',').map(i => +i)
+          let cat_ids = this.$route.query.cat_ids
+          goods_cat_id_second = cat_ids ? cat_ids.split(',').map(i => +i) : []
         }
         // for (let i in this.categories) {
         //   if (this.categories[i].next_selected) {

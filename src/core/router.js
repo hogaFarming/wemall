@@ -46,7 +46,7 @@ const router = new Router({
     { path: '/my/balance', component: () => import('views/my/my-balance'), meta: { requireAuth: true, title: '我的余额' } },
     { path: '/order/pay/balance-recharge', component: () => import('views/my/my-balance-recharge'), meta: { requireAuth: true, title: '我的余额' } }, // 余额充值
     { path: '/my/cards', component: () => import('views/my/my-cards'), meta: { requireAuth: true, title: '我的福利卡' } },
-    { path: '/my/cards-exchange', component: () => import('views/my/my-cards-exchange'), meta: { requireAuth: true, title: '我的福利卡' } }, // 福利卡兑换
+    { path: '/my/cards-exchange', component: () => import('views/my/my-cards-exchange'), meta: { requireAuth: true, title: '福利卡兑换' } }, // 福利卡兑换
     { path: '/my/tickets', component: () => import('views/my/my-tickets'), meta: { requireAuth: true, title: '我的优惠券' } },
     { path: '/my/fenxiang', component: () => import('views/my/fenxiang'), meta: { requireAuth: true, title: '邀请返利' } },
 

@@ -8,9 +8,8 @@
       <div class="sku-head">
         <x-media-object :pic="selectedSku.image || goodsInfo.image" pull="1rem" padding bordered>
           <p class="sku-price">
-            <x-money v-if="goodsInfo.type === 0" :value="selectedSku.sale_price"></x-money>
-            <span v-if="goodsInfo.type === 1">{{ selectedSku.fufen_price || '--' }}分</span>
-            <span v-if="goodsInfo.type === 2">{{ selectedSku.fufen_price || '--' }}分</span>
+            <x-money v-if="goodsInfo.type === 0 || goodsInfo.type === 2" :value="selectedSku.sale_price"></x-money>
+            <span v-if="goodsInfo.type === 1">{{ selectedSku.fufen_price || '--' }}积分</span>
           </p>
           <p class="sku-desc">
             库存 {{ selectedSku.stock }} 件

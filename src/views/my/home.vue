@@ -1,6 +1,6 @@
 <template>
   <div class="page myhome-page">
-    <div class="myhome-banner" :style="{ backgroundImage: 'url(\'' + background + '\')' }">
+    <div class="myhome-banner" :style="{ backgroundImage: 'url(\'' + background + '\')' }" @click="onClickBanner">
       <img style="width: 2.67rem;height: 2.67rem;border-radius: 100%;" :src="avatar" />
       <br>
       <span style="font-size: 18px;display: inline-block;margin: 0.26667rem 0;">{{ username }}</span>
@@ -99,6 +99,10 @@
       },
       sign () {
         this.$router.push('/my/score-sign')
+      },
+      onClickBanner (event) {
+        if (event.target.tagName === 'BUTTON') return
+        this.$router.push('/my/profile')
       }
     }
   }

@@ -19,7 +19,7 @@
     data () {
       return {
         order_id: this.$route.query.order_id,
-        status: this.$route.query.status === '1'
+        status: this.$route.query.status == '1'
       }
     },
     mounted () {

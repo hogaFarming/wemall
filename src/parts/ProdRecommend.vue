@@ -11,7 +11,7 @@
               <x-card
                 v-for="(item, k) in row" :key="k"
                 :pic="thumbnail(item.cover, 300)"
-                @click.native="toProdDetail(item)">
+                @click.native="gotoDetail(item.id)">
                 <span>{{ item.name }}</span>
                 <x-money :value="item.sale_price" slot="meta"></x-money>
               </x-card>
@@ -65,6 +65,14 @@
           }
         })
         return slides
+      }
+    },
+    methods: {
+      gotoDetail (prodId) {
+        // this.$router.push('/product/' + prodId)
+        let url = location.origin + '/product/' + prodId
+        if (location.search) url += location.search
+        location.href = url
       }
     }
   }

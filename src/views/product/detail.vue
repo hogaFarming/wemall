@@ -14,7 +14,8 @@
     <!--商品标题-->
     <div class="mod_pd mgb prod-info">
       <p class="title black-2 fs-lg">{{ goodsInfo.goods_title }}</p>
-      <x-money v-if="selectedSku.sale_price" class="price" :value="selectedSku.sale_price" size="large"></x-money>
+      <x-money v-if="selectedSku.sale_price && goodsType !== 1" class="price" :value="selectedSku.sale_price" size="large"></x-money>
+      <span v-if="selectedSku.fufen_price && goodsType === 1" class="price" style="font-size: 18px;">{{ selectedSku.fufen_price }}<span style="font-size: 12px;"> 积分</span></span>
       <!--<x-money v-else class="price" :value="399" size="large"></x-money>-->
     </div>
 

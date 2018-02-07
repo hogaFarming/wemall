@@ -5,20 +5,20 @@
       <div style="color: #ffffff;">
         <span style="font-size: 16px;">我的福利卡</span>
       </div>
-      <span slot="bottom-left" style="font-size: 30px;line-height: 1;">18<span style="font-size: 14px;">张</span></span>
+      <span slot="bottom-left" style="font-size: 30px;line-height: 1;">{{ cardTotal }}<span style="font-size: 14px;"> 张</span></span>
     </x-media-object>
     <ul class="mycards-list">
-      <li v-for="item in cards">
+      <li v-for="card in cards" :key="card.type">
         <div class="image" style="display: inline-block;width: 0.93rem;height: 0.93rem;margin-right: 1rem;">
-          <img src="/static/icon/ic_gold02.png" alt="">
+          <img :src="'/static/icon/ic_' + iconMap[card.type] + '.png'" alt="">
         </div>
         <span style="margin-right: 1rem;">X</span>
-        <span>{{ item.num }}</span>
+        <span>{{ card.num }}</span>
         <x-button type="primary" pill inline>赠送</x-button>
       </li>
     </ul>
     <x-fixed-bottom>
-      <x-button size="full" type="primary" @click.native="$router.push('/product/exchanges')">去兑换</x-button>
+      <x-button size="full" type="primary" @click.native="$router.push('/my/cards-exchange')">去兑换</x-button>
     </x-fixed-bottom>
   </div>
 </template>
@@ -26,13 +26,17 @@
   export default {
     data () {
       return {
-        cards: [
-          { num: 3 },
-          { num: 3 },
-          { num: 3 },
-          { num: 3 },
-          { num: 3 }
-        ]
+        cards: [],
+        cardTotal: '--',
+        iconMap: {
+          0: 'gold02',
+          1: 'big_coin1',
+          2: 'big_coin2',
+          3: 'big_coin3',
+          4: 'big_coin4',
+          5: 'big_coin5',
+          6: 'big_coin6'
+        }
       }
     },
     mounted () {
@@ -40,7 +44,15 @@
     },
     methods: {
       fetchCards () {
-
+        this.$http.withLoading('/api/prize/list').then(res => {
+          this.cardTotal = res.data.prize_num
+          this.cards = ['w', 1, 2, 3, 4, 5, 6].map((key, index) => {
+            return {
+              type: index,
+              num: res.data.prize['prize_' + key]
+            }
+          })
+        })
       }
     }
   }
