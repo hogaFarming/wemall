@@ -46,30 +46,7 @@
         <x-button v-if="isEdit" type="danger" @click.native="removeAll" style="font-size: 16px;">删&nbsp;&nbsp;&nbsp;除</x-button>
         <x-button v-else type="primary" @click.native="gotoPay" style="font-size: 16px;">去结账</x-button>
       </x-fixed-bottom>
-      <x-fixed-bottom>
-        <div class="bottom-nav">
-          <div class="bottom-nav-item" @click="$router.push('/')">
-            <x-icon type="cart"></x-icon>
-            <br>
-            首页
-          </div>
-          <div class="bottom-nav-item" @click="$router.push('/product/category')">
-            <x-icon type="cart"></x-icon>
-            <br>
-            分类
-          </div>
-          <div class="bottom-nav-item" @click="$router.push('/cart')">
-            <x-icon type="cart"></x-icon>
-            <br>
-            购物车
-          </div>
-          <div class="bottom-nav-item" @click="$router.push('/my/home')">
-            <x-icon type="cart"></x-icon>
-            <br>
-            我的
-          </div>
-        </div>
-      </x-fixed-bottom>
+      <nav-bar></nav-bar>
       <!--sku组件-->
       <prod-sku
         :visible="!!skuCartItem"

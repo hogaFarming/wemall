@@ -13,15 +13,7 @@
       </div>
       <div class="cardexc-btn" @click="exchange(rule.id)">兑换</div>
     </div>
-    <mt-popup :value="popupVisible" :closeOnClickModal="false" class="lottery-popup">
-      <div v-if="detail">
-        <ul>
-          <li v-for="item in detail.goods_info">{{ item.name }} : {{ item.shop_good_name }}</li>
-        </ul>
-        <x-button @click.native="startLottery" type="primary" inline pill>开始抽奖</x-button>
-        <x-button @click.native="popupVisible = false" type="primary" inline pill>取消</x-button>
-      </div>
-    </mt-popup>
+    <lottery-canvas :visible="popupVisible" :data="detail" @cancel="popupVisible = false" width="8.67rem" height="8.67rem"></lottery-canvas>
   </div>
 </template>
 <script>
@@ -44,6 +36,9 @@
     },
     mounted () {
       this.fetchExchangeRules()
+      // setTimeout(() => {
+      //   this.popupVisible = true
+      // }, 500)
     },
     methods: {
       fetchExchangeRules () {
@@ -55,33 +50,6 @@
         this.$http.withLoading('/api/exchange_rule/' + ruleId).then(res => {
           this.detail = res.data
           this.popupVisible = true
-        })
-      },
-      startLottery () {
-        this.$http.withLoading({
-          url: '/api/exchange_rule',
-          data: { exchange_rule_id: this.detail.id },
-          method: 'post'
-        }).then(res => {
-          const goodsType = res.data.good_type
-          const goodsId = res.data.rule_realize_id
-          const typeName = ['普通商品', '积分卡', '推币机游戏道具'][goodsType]
-          console.log('获得奖品：' + typeName + ', id: ' + goodsId)
-
-          if (goodsType === 0) {
-            this.$http.withLoading('/api/user/address').then(res => {
-              if (res.list.length) {
-                this.$http.withLoading({
-                  url: '/api/exchange_update',
-                  data: {
-                    address_id: res.list[0].id,
-                    rule_realize_id: goodsId
-                  },
-                  method: 'post'
-                })
-              }
-            })
-          }
         })
       }
     }
@@ -128,5 +96,7 @@
   .lottery-popup {
     width: 9.33rem;
     height: 10.0667rem;
+    padding-left: 0.32rem;
+    padding-top: 0.75rem;
   }
 </style>

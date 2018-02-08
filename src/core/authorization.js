@@ -13,7 +13,6 @@ export function init (callbackUrl = '/') {
     })
     .then(judgeLogin)
     .then(isAuth => {
-      debugger
       if (!isAuth) {
         redirectToWxAuth(callbackUrl)
         return true

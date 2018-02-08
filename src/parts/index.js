@@ -9,6 +9,8 @@ import RefundItem from './RefundItem.vue'
 import CommentForm from './CommentForm.vue'
 import AddressItem from './AddressItem.vue'
 import Ticket from './Ticket.vue'
+import NavBar from './NavBar.vue'
+import LotteryCanvas from './LotteryCanvas.vue'
 
 Vue.component('comment-short-list', CommentShortList)
 Vue.component('comment-item', CommentItem)
@@ -20,3 +22,5 @@ Vue.component('refund-item', RefundItem)
 Vue.component('comment-form', CommentForm)
 Vue.component('address-item', AddressItem)
 Vue.component('ticket', Ticket)
+Vue.component('nav-bar', NavBar)
+Vue.component('lottery-canvas', LotteryCanvas)
