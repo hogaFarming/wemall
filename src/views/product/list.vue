@@ -114,7 +114,7 @@
         // 分类
         let goods_cat_id_second
         if (this.categories && this.categories.length) {
-          goods_cat_id_second = Object.keys(this.selectedCatIds).map(key => this.selectedCatIds[key])
+          goods_cat_id_second = Object.keys(this.selectedCatIds).map(key => this.selectedCatIds[key]).filter(i => !!i)
         } else {
           let cat_ids = this.$route.query.cat_ids
           goods_cat_id_second = cat_ids ? cat_ids.split(',').map(i => +i) : []
