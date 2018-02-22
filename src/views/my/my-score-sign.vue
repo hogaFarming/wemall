@@ -5,7 +5,7 @@
       <p><span style="font-size: 30px;">{{ totalScore }}</span> 积分</p>
       <x-button @click.native="$router.push('/order/pay/balance-recharge')" type="primary" ghost pill inline>去充值</x-button>
     </div>
-    <div class="sign-records">
+    <div class="sign-records" v-if="signRecords && signRecords.length">
       <div class="sign-records-line"></div>
       <ul class="sign-records-list">
         <li v-for="(item, index) in signRecords" :key="index">
@@ -94,12 +94,14 @@
     padding: 1.333rem 0.48rem;
   }
   .sign-records-line {
-    position: absolute;
+    /*position: absolute;*/
     height: 1px;
     left: 0.48rem;
     right: 0.48rem;
     top: 50%;
     background-color: #c3c3c3;
+    margin-top: 40px;
+    margin-bottom: -40px;
   }
   .sign-records-list {
     display: flex;
@@ -110,6 +112,6 @@
   }
   .sign-records-list li .x-icon {
     height: 26px;
-    margin: 0.2rem 0;
+    margin: 8px 0;
   }
 </style>
