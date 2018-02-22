@@ -19,6 +19,9 @@
 html, body {
   background-color: $background-color;
 }
+html.bgw, html.bgw body {
+  background-color: #fff;
+}
 html {
   font-size: 14px;
   color: #333;

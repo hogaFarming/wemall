@@ -23,7 +23,10 @@
       }
     },
     mounted () {
-
+      document.documentElement.classList.add('bgw')
+    },
+    destroyed () {
+      document.documentElement.classList.remove('bgw')
     },
     methods: {
       gotoOrder () {
@@ -36,7 +39,5 @@
   }
 </script>
 <style>
-  html, body {
-    background-color: #fff;
-  }
+
 </style>

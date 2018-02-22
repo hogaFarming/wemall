@@ -40,7 +40,11 @@
       }
     },
     mounted () {
+      document.documentElement.classList.add('bgw')
       this.fetchCards()
+    },
+    destroyed () {
+      document.documentElement.classList.remove('bgw')
     },
     methods: {
       fetchCards () {
@@ -58,9 +62,6 @@
   }
 </script>
 <style>
-  html, body {
-    background-color: #fff;
-  }
   .page {
     font-size: 14px;
   }

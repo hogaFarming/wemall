@@ -82,7 +82,11 @@
       }
     },
     mounted () {
+      document.documentElement.classList.add('bgw')
       this.fetchRecharges()
+    },
+    destroyed () {
+      document.documentElement.classList.remove('bgw')
     },
     methods: {
       fetchRecharges () {
@@ -156,9 +160,6 @@
   }
 </script>
 <style>
-  html, body {
-    background-color: #fff;
-  }
   .page {
     font-size: 14px;
   }
