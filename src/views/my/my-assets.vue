@@ -29,6 +29,7 @@
     },
     mounted () {
       this.fetchUserCapitals()
+      this.fetchCards()
     },
     methods: {
       fetchUserCapitals () {
@@ -36,8 +37,13 @@
           .then(res => {
             this.balance = res.data.user_capital.balance + '元'
             this.score = res.data.user_capital.fufen + '积分'
-            this.cards = (res.data.user_capital.cards || 0) + '张'
+//            this.cards = (res.data.user_capital.cards || 0) + '张'
           })
+      },
+      fetchCards () {
+        this.$http.withLoading('/api/prize/list').then(res => {
+          this.cards = res.data.prize_num + '张'
+        })
       },
       toMyBalance () {
         this.$router.push(`/my/balance`)
