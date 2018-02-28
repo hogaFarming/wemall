@@ -13,8 +13,12 @@
         每日首次分享朋友圈获得{{ rewards.invite_fufen }}积分
       </p>
     </template>
+    <div class="share-mask" v-show="shareGuideVisible" @click="shareGuideVisible = false">
+      <img src="/static/img/share-guide.png" alt="">
+      <p>点击右上角按钮，分享给朋友</p>
+    </div>
     <x-fixed-bottom>
-      <x-button type="primary" size="full">邀请好友</x-button>
+      <x-button @click.native="showShare" type="primary" size="full">邀请好友</x-button>
     </x-fixed-bottom>
   </div>
 </template>
@@ -22,7 +26,8 @@
   export default {
     data () {
       return {
-        rewards: null
+        rewards: null,
+        shareGuideVisible: false
       }
     },
     mounted () {
@@ -55,6 +60,9 @@
           .then(res => {
             this.rewards = res.data.reward_config
           })
+      },
+      showShare () {
+        this.shareGuideVisible = true
       }
     }
   }
@@ -85,5 +93,27 @@
     top: 12.4rem;
     left: 0;
     width: 10rem;
+  }
+  .share-mask {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+  .share-mask img {
+    position: absolute;
+    right: 0.5733333333333334rem;
+    top: 0.9333333333333333rem;
+    width: 1.56rem;
+  }
+  .share-mask p {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
   }
 </style>
