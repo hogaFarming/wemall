@@ -23,7 +23,7 @@
             @click.native="toProdDetail(item)"
             pic-height="4.2667rem">
             <span>{{ item.name }}</span>
-            <span slot="meta" style="color: #F55B5B;">{{ item.sale_price }}分</span>
+            <span slot="meta" style="color: #F55B5B;">{{ item.fufen_price }}分</span>
           </x-card>
         </x-card-list>
       </div>
