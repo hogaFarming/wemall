@@ -72,6 +72,9 @@
         })
       },
       toUrl (path) {
+        if (path === '/my/fenxiang') {
+          location.href = location.origin + '/my/fenxiang'
+        }
         this.$router.push(path)
       },
       sign () {
