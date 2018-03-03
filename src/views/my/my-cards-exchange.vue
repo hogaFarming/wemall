@@ -13,7 +13,7 @@
       </div>
       <div class="cardexc-btn" @click="exchange(rule.id)">兑换</div>
     </div>
-    <lottery-canvas :visible="popupVisible" :data="detail" @cancel="popupVisible = false" width="8.67rem" height="8.67rem"></lottery-canvas>
+    <lottery-canvas :visible="popupVisible" :data="detail" @cancel="popupVisible = false" @result="popupVisible = false" width="8.67rem" height="8.67rem"></lottery-canvas>
   </div>
 </template>
 <script>

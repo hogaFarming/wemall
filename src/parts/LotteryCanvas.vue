@@ -1,6 +1,6 @@
 <template>
   <mt-popup :value="visible" :closeOnClickModal="false" class="lottery-popup">
-    <div style="position: absolute;right: 10px;top: 10px;" @touchstart="handleCancel">关闭</div>
+    <div style="position: absolute;right: 10px;top: 10px;z-index: 100;" @touchstart="handleCancel">关闭</div>
     <div class="canvas-wrap" :style="{ width: width, height: width }" ref="wrap">
       <div class="canvas-panel-bg"></div>
       <div class="canvas-panels">
@@ -60,37 +60,48 @@
     },
     methods: {
       handleCancel () {
-        debugger
         this.$emit('cancel')
       },
       startLottery () {
-        this.$refs.wrap.style.transform = 'rotate(' + 3600 + 'deg)'
         this.$http({
           url: '/api/exchange_rule',
           data: { exchange_rule_id: this.data.id },
           method: 'post'
         }).then(res => {
           const goodsType = res.data.good_type
-          const goodsId = res.data.rule_realize_id
           const typeName = ['普通商品', '积分卡', '推币机游戏道具'][goodsType]
-          console.log('获得奖品：' + typeName + ', id: ' + goodsId)
+          const resultGoods = this.items.find(item => item.id === res.data.good_id)
+          const resultIndex = this.items.indexOf(resultGoods)
 
-          if (goodsType === 0) {
-            this.$http.withLoading('/api/user/address').then(res => {
-              if (res.list.length) {
-                this.$http.withLoading({
-                  url: '/api/exchange_update',
-                  data: {
-                    address_id: res.list[0].id,
-                    rule_realize_id: goodsId
-                  },
-                  method: 'post'
-                })
-              }
-            })
-          }
+          const rotateDeg = 360 / this.items.length * resultIndex + 3600
+          this.$refs.wrap.style.transform = 'rotate(' + rotateDeg + 'deg)'
 
-          this.$emit('result')
+          setTimeout(() => {
+            // this.$messagebox.alert('恭喜您获得奖品：' + resultGoods.name).then(action => {
+            //   this.$emit('result')
+            //   this.$refs.wrap.style.transform = ''
+            // })
+            alert('恭喜您获得：' + resultGoods.name)
+            this.$emit('result')
+            this.$refs.wrap.style.transform = ''
+          }, 6000)
+
+          // if (goodsType === 0) {
+          //   this.$http.withLoading('/api/user/address').then(res => {
+          //     if (res.list.length) {
+          //       this.$http.withLoading({
+          //         url: '/api/exchange_update',
+          //         data: {
+          //           address_id: res.list[0].id,
+          //           rule_realize_id: res.data.rule_realize_id
+          //         },
+          //         method: 'post'
+          //       })
+          //     }
+          //   })
+          // }
+        }, err => {
+          this.$toast(err.message || '抽奖失败')
         })
       }
     }
