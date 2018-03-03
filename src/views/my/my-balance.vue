@@ -48,7 +48,7 @@
         })
       },
       toRecharge () {
-        this.$router.push('/order/pay/balance-recharge')
+        location.href = location.origin + '/order/pay/balance-recharge'
       }
     }
   }

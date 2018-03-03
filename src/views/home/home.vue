@@ -55,6 +55,10 @@
         this.$router.push('/product/search')
       },
       toActionUrl (path) {
+        if (path === '/order/pay/balance-recharge') {
+          location.href = location.origin + '/order/pay/balance-recharge'
+          return
+        }
         if (path) this.$router.push(path)
       },
       toLink (link) {
