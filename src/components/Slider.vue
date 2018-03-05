@@ -41,9 +41,18 @@
     watch: {
       length () {
         console.log(this.length)
-        this.$nextTick(() => {
-          this.swipe.setup()
-        })
+        setTimeout(() => {
+          let options = {
+            callback: this.onSlide
+          }
+          if (this.auto) {
+            options.auto = this.auto
+            options.continuous = true
+            options.autoRestart = true
+          }
+          this.swipe.kill()
+          this.swipe = new Swipe(this.$refs.slider, options)
+        }, 1000)
         if (this.$slots.default) {
           this.dots = this.$slots.default.filter(i => i.tag).map((i, idx) => idx)
         }
