@@ -5,7 +5,7 @@
     <!--</x-cell>-->
     <!--轮播图-->
     <div class="top-slider-wrap bdb">
-      <x-slider class="bdb" indicator="dots" :length="banners.length">
+      <x-slider class="bdb" indicator="dots" :length="banners.length" :auto="5000">
         <x-slider-item v-for="item in banners" :key="item.id">
           <img :src="item.cover" alt="item.title" @click="toLink(item.link)">
         </x-slider-item>
