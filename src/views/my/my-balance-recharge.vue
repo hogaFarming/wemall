@@ -60,13 +60,15 @@
         } else if (num * 100 < this.rechargeMin) {
           return 0
         } else {
-          let result = 0
-          this.rechargeCards.forEach(item => {
-            if (num * 100 >= item.key) {
-              result = item.give
-            }
-          })
-          return result
+          // let result = 0
+          // this.rechargeCards.forEach(item => {
+          //   if (num * 100 >= item.key) {
+          //     result = item.give
+          //   }
+          // })
+          // return result
+          let ratio = this.rechargeCards[0].give / (this.rechargeCards[0].key / 100)
+          return num * ratio
         }
       },
       indicatorLeft () {
