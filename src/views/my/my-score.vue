@@ -4,7 +4,7 @@
       <div style="color: #ffffff;">
         <span style="font-size: 16px;">积分余额</span>
       </div>
-      <span slot="bottom-left" style="font-size: 30px;line-height: 1;">58888</span>
+      <span slot="bottom-left" style="font-size: 30px;line-height: 1;">{{ score }}</span>
     </x-media-object>
     <div class="score-month">
       <!--<x-cell class="black-3" style="background: #f0f0f0;">-->
@@ -27,12 +27,21 @@
   export default {
     mixins: [scrollListMixin],
     data () {
-      return {}
+      return {
+        score: '--'
+      }
     },
     mounted () {
+      this.fetchUserCapitals()
       this.queryList()
     },
     methods: {
+      fetchUserCapitals () {
+        this.$http.withLoading('/api/user/capitals')
+          .then(res => {
+            this.score = res.data.user_capital.fufen
+          })
+      },
       queryList (nextPage) {
         this.$http.withLoading(nextPage || '/api/fufen/log').then(res => {
           this.setListData(res.list)
